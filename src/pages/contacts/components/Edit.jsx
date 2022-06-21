@@ -52,10 +52,10 @@ function EditContact({ map, dispatch }) {
         }
       >
         <Form.Header>联系人信息</Form.Header>
-        <Form.Item name="concate" label="联系人" rules={formRule}>
+        <Form.Item label="联系人" rules={formRule}>
           <Input placeholder="请输入" />
         </Form.Item>
-        <Form.Item name="phone" label="手机号" rules={formRule}>
+        <Form.Item label="手机号" rules={formRule}>
           <Input placeholder="请输入" />
         </Form.Item>
 
@@ -74,7 +74,7 @@ function EditContact({ map, dispatch }) {
         >
           <Input placeholder="请输入" />
         </Form.Item>
-        <Form.Item name="area" label="详细地址" rules={formRule}>
+        <Form.Item label="详细地址" rules={formRule}>
           <Input placeholder="请输入" />
         </Form.Item>
       </Form>

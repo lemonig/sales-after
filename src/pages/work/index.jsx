@@ -18,6 +18,7 @@ import {
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { demoSrc, mockUpload, mockUploadFail } from "../../utils/imgUpload";
+import provinceJSON from "../../utils/province.json";
 
 function Work() {
   let navigate = useNavigate();
@@ -40,7 +41,10 @@ function Work() {
       },
     ],
   ]); //类型选项
-  const [typeVisible, setTypeVisible] = useState(false);
+
+  useEffect(() => {
+    console.log(form);
+  }, []);
 
   const back = () => {
     navigate(-1, { replace: true });
@@ -48,6 +52,7 @@ function Work() {
 
   const onSubmit = () => {
     const values = form.getFieldsValue();
+    console.log(values);
   };
   return (
     <>
@@ -64,31 +69,45 @@ function Work() {
           </Button>
         }
       >
+        <Form.Item label="联系人" name="concate">
+          <Input placeholder="请输入厂家、仪器、型号" />
+        </Form.Item>
         <Form.Item
-          name="contact"
-          label="联系人"
+          label="选择类型"
+          name="type"
+          onClick={(e, typePickerRef) => {
+            typePickerRef.current?.open();
+          }}
           trigger="onConfirm"
-        ></Form.Item>
-        <Form.Item label="选择类型" name="type">
-          <Input
-            placeholder="请输入"
-            trigger="onConfirm"
-            onClick={() => {
-              setTypeVisible(true);
-            }}
-            extra
-          />
+        >
+          <Picker columns={typePickerData}>
+            {([value]) => (value ? value.label : "请选择")}
+          </Picker>
+        </Form.Item>
+
+        <Form.Item
+          label="选择省份"
+          name="province"
+          onClick={(e, provincePickerRef) => {
+            provincePickerRef.current?.open();
+          }}
+          trigger="onConfirm"
+        >
           <Picker
-            columns={typePickerData}
-            visible={typeVisible}
-            onClose={() => {
-              setTypeVisible(false);
-            }}
-          />
+            columns={[
+              provinceJSON.map((item) => {
+                return {
+                  value: item.code,
+                  label: item.name,
+                  key: item.code,
+                };
+              }),
+            ]}
+          >
+            {([value]) => (value ? value.label : "请选择")}
+          </Picker>
         </Form.Item>
-        <Form.Item label="选择省份" name="province">
-          <Input placeholder="请输入" />
-        </Form.Item>
+
         <Form.Item label="描述" layout="vertical" name="desc">
           <TextArea placeholder="请输入内容" rows={3} />
         </Form.Item>
