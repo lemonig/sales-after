@@ -9,6 +9,7 @@ const ContactEdit = React.lazy(() =>
 ); //编辑联系人
 const MyWork = React.lazy(() => import("../pages/my-work")); //我的工单
 const Complain = React.lazy(() => import("../pages/complain")); //投诉建议
+const Map = React.lazy(() => import("../pages/map")); //投诉建议
 
 /**
  * index: true 默认主路由不需要path
@@ -73,6 +74,14 @@ const config = [
         element: (
           <React.Suspense fallback={<>...</>}>
             <Complain />,
+          </React.Suspense>
+        ),
+      },
+      {
+        path: "map",
+        element: (
+          <React.Suspense fallback={<>...</>}>
+            <Map />,
           </React.Suspense>
         ),
       },
