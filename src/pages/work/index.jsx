@@ -14,16 +14,17 @@ import {
   Space,
   Picker,
   ImageUploader,
+  Popup,
 } from "antd-mobile";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { demoSrc, mockUpload, mockUploadFail } from "../../utils/imgUpload";
 import provinceJSON from "../../utils/province.json";
+import ContactList from "../../components/ContactList";
 
 function Work() {
   let navigate = useNavigate();
   const [form] = Form.useForm();
-
   const [fileList, setFileList] = useState([
     {
       url: demoSrc,
@@ -41,6 +42,8 @@ function Work() {
       },
     ],
   ]); //类型选项
+
+  const [contactPopupVis, setContactPopupVis] = useState(false);
 
   useEffect(() => {
     console.log(form);
@@ -69,12 +72,28 @@ function Work() {
           </Button>
         }
       >
-        <Form.Item label="联系人" name="concate">
-          <Input placeholder="请输入厂家、仪器、型号" />
+        <Form.Item
+          label="联系人"
+          name="type"
+          rules={[{ required: true }]}
+          onClick={() => {
+            setContactPopupVis(true);
+          }}
+        >
+          <Popup
+            visible={contactPopupVis}
+            onMaskClick={() => {
+              setContactPopupVis(false);
+            }}
+            bodyStyle={{ height: "80vh" }}
+          >
+            <ContactList></ContactList>
+          </Popup>
         </Form.Item>
         <Form.Item
           label="选择类型"
-          name="type"
+          name="concate"
+          rules={[{ required: true }]}
           onClick={(e, typePickerRef) => {
             typePickerRef.current?.open();
           }}
@@ -88,6 +107,7 @@ function Work() {
         <Form.Item
           label="选择省份"
           name="province"
+          rules={[{ required: true }]}
           onClick={(e, provincePickerRef) => {
             provincePickerRef.current?.open();
           }}
@@ -108,7 +128,12 @@ function Work() {
           </Picker>
         </Form.Item>
 
-        <Form.Item label="描述" layout="vertical" name="desc">
+        <Form.Item
+          label="描述"
+          layout="vertical"
+          name="desc"
+          rules={[{ required: true }]}
+        >
           <TextArea placeholder="请输入内容" rows={3} />
         </Form.Item>
         <Form.Header>以下为选填信息，有助于更快的解决问题</Form.Header>

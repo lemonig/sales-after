@@ -7,12 +7,19 @@ const {
   POSTCSS_MODES,
   loaderByName,
 } = require("@craco/craco");
+const path = require("path");
 const CracoLessPlugin = require("craco-less");
-
+const pathResolve = (pathUrl) => path.join(__dirname, pathUrl);
 module.exports = {
   mode: "development",
   devServer: {
     port: 3001,
+  },
+  webpack: {
+    alias: {
+      "@Components": pathResolve("src/components"),
+      "@": pathResolve("src"),
+    },
   },
   babel: {
     presets: [

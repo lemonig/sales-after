@@ -11,6 +11,8 @@ const MyWork = React.lazy(() => import("../pages/my-work")); //我的工单
 const Complain = React.lazy(() => import("../pages/complain")); //投诉建议
 const Map = React.lazy(() => import("../pages/map")); //投诉建议
 
+const Progress = React.lazy(() => import("../pages/progress")); //进度
+const Evalute = React.lazy(() => import("../pages/evalute"));
 /**
  * index: true 默认主路由不需要path
  * **/
@@ -57,8 +59,13 @@ const config = [
         ),
       },
       {
-        path: "contactEdit/:id",
+        path: "contactEdit",
         element: <ContactEdit />,
+        // (
+        //   <React.Suspense fallback={<>...</>}>
+        //     <ContactEdit />,
+        //   </React.Suspense>
+        // ),
       },
 
       {
@@ -84,6 +91,14 @@ const config = [
             <Map />,
           </React.Suspense>
         ),
+      },
+      {
+        path: "progress",
+        element: <Progress />,
+      },
+      {
+        path: "evalute",
+        element: <Evalute />,
       },
     ],
   },

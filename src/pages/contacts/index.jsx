@@ -38,15 +38,22 @@ function Contacts() {
     });
   };
   const handleEditContact = () => {
-    navigate("/contactEdit/1");
+    navigate({
+      pathname: "/contactEdit",
+      search: "?id=1",
+    });
   };
+  const handleAddContact = () => {
+    navigate("/contactEdit");
+  };
+
   return (
     <div className="contacts-wrap">
       <NavBar back="返回" onBack={back}>
         管理联系人
       </NavBar>
       <div className="btn-top">
-        <Button>
+        <Button onClick={handleAddContact}>
           <Space>
             <AddOutline />
             <span>添加联系人</span>

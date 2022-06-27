@@ -9,17 +9,30 @@ import {
   Form,
   Input,
 } from "antd-mobile";
-import { useNavigate } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import IconFont from "../../../components/IconFont";
 import { connect } from "react-redux";
 import store from "../../../store";
 
 function EditContact({ map, dispatch }) {
+  const [isAdd, setIsAdd] = useState(true);
   let navigate = useNavigate();
+  let id = new URLSearchParams(useLocation().search).get("id");
   const [form] = Form.useForm();
   const formRule = [{ required: true }];
-  useEffect(() => {}, []);
 
+  useEffect(() => {
+    console.log(id);
+    if (id) {
+      setIsAdd(false);
+    }
+  }, []);
+  const getPageData = () => {};
   const back = () => {
     navigate(-1, { replace: true });
   };
@@ -33,7 +46,7 @@ function EditContact({ map, dispatch }) {
   return (
     <div>
       <NavBar back="返回" onBack={back}>
-        管理联系人
+        {isAdd ? "新建" : "管理"}联系人
       </NavBar>
       <Form
         form={form}

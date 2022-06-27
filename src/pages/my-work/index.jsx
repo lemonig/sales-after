@@ -1,7 +1,26 @@
 import React from "react";
+import { Tabs, NavBar } from "antd-mobile";
+
+import Serve from "./components/Serve";
+import TitleBar from "@Components/TitleBar";
 
 function MyWork() {
-  return <div>MyWork</div>;
+  return (
+    <div className="my-work">
+      <TitleBar title="我的服务单" />
+      <Tabs>
+        <Tabs.Tab title="所有服务" key="fruits">
+          <Serve />
+        </Tabs.Tab>
+        <Tabs.Tab title="进行中" key="vegetables">
+          西红柿
+        </Tabs.Tab>
+        <Tabs.Tab title="待评价" key="animals">
+          蚂蚁
+        </Tabs.Tab>
+      </Tabs>
+    </div>
+  );
 }
 
 export default MyWork;
