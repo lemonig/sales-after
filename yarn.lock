@@ -2603,10 +2603,10 @@ antd-mobile-v5-count@^1.0.1:
   resolved "https://registry.yarnpkg.com/antd-mobile-v5-count/-/antd-mobile-v5-count-1.0.1.tgz#85f20c46d1635c24e856bcf5ad55e8c98e44a523"
   integrity sha512-YGsiEDCPUDz3SzfXi6gLZn/HpeSMW+jgPc4qiYUr1fSopg3hkUie2TnooJdExgfiETHefH3Ggs58He0OVfegLA==
 
-antd-mobile@^5.15.0:
-  version "5.15.0"
-  resolved "https://registry.yarnpkg.com/antd-mobile/-/antd-mobile-5.15.0.tgz#a125974471d5896670fcfb7946174c559e6a70a9"
-  integrity sha512-7jL1HPNo57L4eAURcy0kWMyo5zlPQnygl9jVW2kB9JvW/+hkfg5v8ysjEGZzZbXZOy1Vgz6lfgjWoo0rqAPaGQ==
+antd-mobile@5.16.1:
+  version "5.16.1"
+  resolved "https://registry.yarnpkg.com/antd-mobile/-/antd-mobile-5.16.1.tgz#0b805199db456f51ef1475c99b121ced39f7e1df"
+  integrity sha512-uBn9ZlUCm2UFa2YC+wF/JntzGaSS+pX4pYE6cS//Q+31BVsTRac0tQHhm5EZfpCNrPUFyDxab185/K8MNYAKYQ==
   dependencies:
     "@floating-ui/dom" "^0.5.2"
     "@react-spring/web" "^9.4.5"
@@ -6364,6 +6364,11 @@ mkdirp@~0.5.1:
   integrity sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==
   dependencies:
     minimist "^1.2.6"
+
+moment@^2.29.3:
+  version "2.29.3"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.3.tgz#edd47411c322413999f7a5940d526de183c031f3"
+  integrity sha512-c6YRvhEo//6T2Jz/vVtYzqBzwvPT95JBQ+smCytzf7c50oMZRsR/a4w88aD34I+/QVSfnoAnSBFPJHItlOMJVw==
 
 ms@2.0.0:
   version "2.0.0"

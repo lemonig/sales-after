@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Toast, Button, NavBar, Space, Modal, Radio } from "antd-mobile";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
@@ -9,18 +9,23 @@ import {
   SmileOutline,
   SmileFill,
 } from "antd-mobile-icons";
-const msg = [
-  {
-    name: "张金民 13505415263",
-    add: "浙江省嘉兴市平湖市通界桥路1号",
-  },
-  {
-    name: "张金民1 11105415263",
-    add: "浙江省杭州市平湖市通界桥路dd1号",
-  },
-];
-function Contacts() {
+import { contactList, contactDelete } from "../../api/contact";
+
+function Contacts({ selectConcate }) {
   let navigate = useNavigate();
+  const [pageData, setPageData] = useState([]);
+  const [concated, setConcated] = useState();
+
+  const getPageData = async () => {
+    let { data } = await contactList();
+    console.log(data);
+    setPageData(data);
+  };
+
+  useEffect(() => {
+    console.log("联系人");
+    getPageData();
+  }, []);
 
   const onClick = () => {
     Toast.show("点击了卡片");
@@ -37,7 +42,7 @@ function Contacts() {
   const back = () => {
     navigate(-1, { replace: true });
   };
-  const handleDelContact = () => {
+  const handleDelContact = (id) => {
     Modal.confirm({
       title: "提示",
       content: "确认删除联系人吗",
@@ -45,6 +50,14 @@ function Contacts() {
       confirmText: "确认",
       onConfirm: () => {
         console.log("Confirmed");
+        let { success } = contactDelete({ id: id });
+        if (success) {
+          Toast.show({
+            icon: "success",
+            content: "删除成功",
+          });
+        }
+        getPageData();
       },
       onCancel: () => {
         console.log("Confirmed");
@@ -60,12 +73,25 @@ function Contacts() {
   const handleAddContact = () => {
     navigate("/contactEdit");
   };
+
+  // 选择
+  const handleSelectChange = (val) => {
+    setConcated(val);
+  };
+  // 确认
+  const handleSelectConfirm = () => {
+    let res = pageData.filter((item) => {
+      return item.id === concated;
+    });
+    selectConcate(res[0]);
+  };
+
   const $concat = () => {
-    return msg.map((item) => (
-      <div className="list-item" key={item.name}>
+    return pageData.map((item) => (
+      <div className="list-item" key={item.id}>
         <Radio
           className="my-radio"
-          value="radio1"
+          value={item.id}
           icon={(checked) =>
             checked ? (
               <SmileFill style={{ color: "var(--adm-color-primary)" }} />
@@ -80,11 +106,13 @@ function Contacts() {
           style={{ borderRadius: "6px" }}
         >
           <div className="content">
-            <p>{item.name}</p>
-            <p>{item.add}</p>
+            <p>
+              {item.name} {item.mobile}
+            </p>
+            <p>{item.address}</p>
           </div>
           <div className="footer" onClick={(e) => e.stopPropagation()}>
-            <span onClick={handleDelContact}>
+            <span onClick={() => handleDelContact(item.id)}>
               <DeleteOutline color="var(--adm-color-primary)" />
               删除
             </span>
@@ -108,9 +136,23 @@ function Contacts() {
           </Space>
         </Button>
       </div>
-      <div className="contact-list">{$concat()}</div>
+      <div className="contact-list">
+        <Radio.Group
+          concated={concated}
+          onChange={(val) => {
+            handleSelectChange(val);
+          }}
+        >
+          {$concat()}
+        </Radio.Group>
+      </div>
       <div className="btn-bottom">
-        <Button color="primary" fill="solid" style={{ width: "90%" }}>
+        <Button
+          color="primary"
+          fill="solid"
+          style={{ width: "90%" }}
+          onClick={handleSelectConfirm}
+        >
           确认
         </Button>
       </div>

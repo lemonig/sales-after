@@ -15,12 +15,22 @@ import {
   Picker,
   ImageUploader,
   Popup,
+  Toast,
 } from "antd-mobile";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { demoSrc, mockUpload, mockUploadFail } from "../../utils/imgUpload";
 import provinceJSON from "../../utils/province.json";
 import ContactList from "../../components/ContactList";
+import { complaintAdd } from "../../api/complain";
+
+const provinceList = provinceJSON.map((item) => {
+  return {
+    value: item.code,
+    label: item.name,
+    key: item.code,
+  };
+});
 
 function Complain() {
   let navigate = useNavigate();
@@ -32,7 +42,7 @@ function Complain() {
   ]);
 
   const [contactPopupVis, setContactPopupVis] = useState(false);
-
+  const [concated, setConcated] = useState({}); //已选择的联系人
   useEffect(() => {
     console.log(form);
   }, []);
@@ -41,9 +51,33 @@ function Complain() {
     navigate(-1, { replace: true });
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const values = form.getFieldsValue();
+    values.cityCode = values.cityCode[0];
     console.log(values);
+    let { success } = await complaintAdd(values);
+    if (success) {
+      Toast.show({
+        icon: "success",
+        content: "提交成功",
+      });
+      back();
+    } else {
+      Toast.show({
+        icon: "fail",
+        content: "失败",
+      });
+    }
+  };
+
+  // 选择联系人
+  const selectConcate = (val) => {
+    console.log(val);
+    setConcated(val);
+    setContactPopupVis(false);
+    form.setFieldsValue({
+      linkman_id: val.id,
+    });
   };
   return (
     <>
@@ -62,43 +96,28 @@ function Complain() {
       >
         <Form.Item
           label="联系人"
-          name="type"
+          name="linkman_id"
           rules={[{ required: true }]}
           onClick={() => {
             setContactPopupVis(true);
           }}
         >
-          <Popup
-            visible={contactPopupVis}
-            onMaskClick={() => {
-              setContactPopupVis(false);
-            }}
-            bodyStyle={{ height: "80vh" }}
-          >
-            <ContactList></ContactList>
-          </Popup>
+          <p>
+            {concated.name} {concated.mobile}
+          </p>
+          <p>{concated.address}</p>
         </Form.Item>
 
         <Form.Item
           label="选择省份"
-          name="province"
+          name="cityCode"
           rules={[{ required: true }]}
           onClick={(e, provincePickerRef) => {
             provincePickerRef.current?.open();
           }}
           trigger="onConfirm"
         >
-          <Picker
-            columns={[
-              provinceJSON.map((item) => {
-                return {
-                  value: item.code,
-                  label: item.name,
-                  key: item.code,
-                };
-              }),
-            ]}
-          >
+          <Picker columns={[provinceList]}>
             {([value]) => (value ? value.label : "请选择")}
           </Picker>
         </Form.Item>
@@ -106,13 +125,13 @@ function Complain() {
         <Form.Item
           label="描述"
           layout="vertical"
-          name="desc"
+          name="describe"
           rules={[{ required: true }]}
         >
           <TextArea placeholder="请输入内容" rows={3} />
         </Form.Item>
 
-        <Form.Item label="照片" layout="vertical">
+        <Form.Item label="照片" layout="vertical" name="photo">
           <ImageUploader
             value={fileList}
             onChange={setFileList}
@@ -121,6 +140,15 @@ function Complain() {
         </Form.Item>
         <Form.Header />
       </Form>
+      <Popup
+        visible={contactPopupVis}
+        onMaskClick={() => {
+          setContactPopupVis(false);
+        }}
+        bodyStyle={{ height: "80vh" }}
+      >
+        <ContactList selectConcate={selectConcate}></ContactList>
+      </Popup>
     </>
   );
 }

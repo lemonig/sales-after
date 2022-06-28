@@ -30,8 +30,10 @@ function Serve() {
 
   const getPageData = async () => {
     let { data } = await workOrderList(pageMsg);
-    console.log(data);
-    setPageData(data);
+    let newData = data.filter((item) => {
+      return item.status === 5;
+    });
+    setPageData(newData);
   };
   return (
     <div>

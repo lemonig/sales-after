@@ -51,7 +51,7 @@ const config = [
         ),
       },
       {
-        path: "contacts/*",
+        path: "contacts",
         element: (
           <React.Suspense fallback={<>...</>}>
             <Contacts />,

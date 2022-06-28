@@ -25,7 +25,7 @@ import { mapAction } from "../../store/actions/map-action";
 let aMap = {}; //地图实例
 let mapIcon = null;
 
-function Map() {
+function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
   let navigate = useNavigate();
   const [poi, setPoi] = useState([]); //地图poi 信息
   const [mapMove, setmapMove] = useState(false); //地图是否移动
@@ -228,13 +228,19 @@ function Map() {
   }, []);
 
   const back = () => {
-    navigate(-1, { replace: true });
+    handleMapBack();
+    // navigate(-1, { replace: true });
   };
   const handleSelectAdress = (poi) => {
     let lnglat = aMap.getCenter();
     console.log(lnglat);
     console.log(poi);
     console.log(address);
+    handkeSeleteAddr({
+      address,
+      poi,
+      lnglat,
+    });
     store.dispatch(
       mapAction.selectAddress({
         address,
@@ -242,7 +248,6 @@ function Map() {
         lnglat,
       })
     );
-    back();
   };
   return (
     <div className="map-wrap">

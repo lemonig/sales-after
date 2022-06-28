@@ -15,12 +15,28 @@ import {
   Picker,
   ImageUploader,
   Popup,
+  Toast,
 } from "antd-mobile";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { demoSrc, mockUpload, mockUploadFail } from "../../utils/imgUpload";
 import provinceJSON from "../../utils/province.json";
 import ContactList from "../../components/ContactList";
+import {
+  workOrderList,
+  faulttypeList,
+  workOrderAdd,
+} from "../../api/workorder";
+import { contactList, cityList } from "../../api/public";
+import { log } from "@craco/craco/lib/logger";
+
+const provinceList = provinceJSON.map((item) => {
+  return {
+    value: item.code,
+    label: item.name,
+    key: item.code,
+  };
+});
 
 function Work() {
   let navigate = useNavigate();
@@ -30,32 +46,60 @@ function Work() {
       url: demoSrc,
     },
   ]);
-  const [typePickerData, setTypePickerData] = useState([
-    [
-      {
-        label: "信息咨询",
-        value: "001",
-      },
-      {
-        label: "业务报修",
-        value: "002",
-      },
-    ],
-  ]); //类型选项
+  const [typePickerData, setTypePickerData] = useState([[]]); //类型选项
 
-  const [contactPopupVis, setContactPopupVis] = useState(false);
+  const [contactPopupVis, setContactPopupVis] = useState(false); //联系人弹框vis
+  const [concated, setConcated] = useState({}); //已选择的联系人
 
   useEffect(() => {
     console.log(form);
+    getTypePickerData();
   }, []);
 
+  const getTypePickerData = async () => {
+    let { data } = await faulttypeList();
+    let newdata = data.map((item) => ({
+      label: item.name,
+      value: item.id,
+    }));
+
+    setTypePickerData([newdata]);
+  };
   const back = () => {
     navigate(-1, { replace: true });
   };
 
-  const onSubmit = () => {
+  // 选择联系人
+  const selectConcate = (val) => {
+    console.log(val);
+    setConcated(val);
+    setContactPopupVis(false);
+    form.setFieldsValue({
+      linkman_id: val.id,
+    });
+  };
+
+  const onSubmit = async () => {
+    // form.validateFields().then(_ => {
+    console.log(fileList);
     const values = form.getFieldsValue();
     console.log(values);
+    values.fault_type_id = values.fault_type_id[0];
+    values.cityCode = values.cityCode[0];
+    let { success } = await workOrderAdd();
+    if (success) {
+      Toast.show({
+        icon: "success",
+        content: "提交成功",
+      });
+      back();
+    } else {
+      Toast.show({
+        icon: "fail",
+        content: "失败",
+      });
+    }
+    // })
   };
   return (
     <>
@@ -74,25 +118,20 @@ function Work() {
       >
         <Form.Item
           label="联系人"
-          name="type"
+          name="linkman_id"
           rules={[{ required: true }]}
           onClick={() => {
             setContactPopupVis(true);
           }}
         >
-          <Popup
-            visible={contactPopupVis}
-            onMaskClick={() => {
-              setContactPopupVis(false);
-            }}
-            bodyStyle={{ height: "80vh" }}
-          >
-            <ContactList></ContactList>
-          </Popup>
+          <p>
+            {concated.name} {concated.mobile}
+          </p>
+          <p>{concated.address}</p>
         </Form.Item>
         <Form.Item
           label="选择类型"
-          name="concate"
+          name="fault_type_id"
           rules={[{ required: true }]}
           onClick={(e, typePickerRef) => {
             typePickerRef.current?.open();
@@ -106,24 +145,14 @@ function Work() {
 
         <Form.Item
           label="选择省份"
-          name="province"
+          name="cityCode"
           rules={[{ required: true }]}
           onClick={(e, provincePickerRef) => {
             provincePickerRef.current?.open();
           }}
           trigger="onConfirm"
         >
-          <Picker
-            columns={[
-              provinceJSON.map((item) => {
-                return {
-                  value: item.code,
-                  label: item.name,
-                  key: item.code,
-                };
-              }),
-            ]}
-          >
+          <Picker columns={[provinceList]}>
             {([value]) => (value ? value.label : "请选择")}
           </Picker>
         </Form.Item>
@@ -131,24 +160,38 @@ function Work() {
         <Form.Item
           label="描述"
           layout="vertical"
-          name="desc"
+          name="describe"
           rules={[{ required: true }]}
         >
           <TextArea placeholder="请输入内容" rows={3} />
         </Form.Item>
         <Form.Header>以下为选填信息，有助于更快的解决问题</Form.Header>
-        <Form.Item label="产品型号" name="version">
+        <Form.Item label="产品型号" name="model">
           <Input placeholder="请输入厂家、仪器、型号" />
         </Form.Item>
-        <Form.Item label="照片" layout="vertical">
+        <Form.Item label="照片" layout="vertical" name="photo">
           <ImageUploader
             value={fileList}
-            onChange={setFileList}
+            onChange={(items) => {
+              console.log(items);
+              setFileList();
+            }}
             upload={mockUpload}
+            accept="image/*"
           />
         </Form.Item>
         <Form.Header />
       </Form>
+      {/* 联系人弹窗 */}
+      <Popup
+        visible={contactPopupVis}
+        onMaskClick={() => {
+          setContactPopupVis(false);
+        }}
+        bodyStyle={{ height: "80vh" }}
+      >
+        <ContactList selectConcate={selectConcate}></ContactList>
+      </Popup>
     </>
   );
 }

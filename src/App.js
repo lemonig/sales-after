@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.less";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import Router from "./router/index";
 
 function App() {
