@@ -80,13 +80,17 @@ function Work() {
   };
 
   const onSubmit = async () => {
-    // form.validateFields().then(_ => {
     console.log(fileList);
+    await form.validateFields();
     const values = form.getFieldsValue();
     console.log(values);
+    values.photo = values.photo.map((item) => {
+      return item.url;
+    });
     values.fault_type_id = values.fault_type_id[0];
     values.cityCode = values.cityCode[0];
-    let { success } = await workOrderAdd();
+
+    let { success } = await workOrderAdd(values);
     if (success) {
       Toast.show({
         icon: "success",
@@ -172,10 +176,7 @@ function Work() {
         <Form.Item label="照片" layout="vertical" name="photo">
           <ImageUploader
             value={fileList}
-            onChange={(items) => {
-              console.log(items);
-              setFileList();
-            }}
+            onChange={setFileList}
             upload={mockUpload}
             accept="image/*"
           />

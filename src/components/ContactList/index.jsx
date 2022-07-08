@@ -10,6 +10,7 @@ import {
   SmileFill,
 } from "antd-mobile-icons";
 import { contactList, contactDelete } from "../../api/contact";
+import IconFont from "../IconFont";
 
 function Contacts({ selectConcate }) {
   let navigate = useNavigate();
@@ -19,6 +20,8 @@ function Contacts({ selectConcate }) {
   const getPageData = async () => {
     let { data } = await contactList();
     console.log(data);
+    setConcated(data[0].id);
+
     setPageData(data);
   };
 
@@ -26,18 +29,6 @@ function Contacts({ selectConcate }) {
     console.log("联系人");
     getPageData();
   }, []);
-
-  const onClick = () => {
-    Toast.show("点击了卡片");
-  };
-
-  const onHeaderClick = () => {
-    Toast.show("点击了卡片Header区域");
-  };
-
-  const onBodyClick = () => {
-    Toast.show("点击了卡片Body区域");
-  };
 
   const back = () => {
     navigate(-1, { replace: true });
@@ -65,13 +56,23 @@ function Contacts({ selectConcate }) {
     });
   };
   const handleEditContact = () => {
-    navigate({
-      pathname: "/contactEdit",
-      search: "?id=1",
+    Modal.confirm({
+      content: "离开本页将不保存任何信息，是否离开",
+      onConfirm: () => {
+        navigate({
+          pathname: "/contactEdit",
+          search: "?id=1",
+        });
+      },
     });
   };
   const handleAddContact = () => {
-    navigate("/contactEdit");
+    Modal.confirm({
+      content: "离开本页将不保存任何信息，是否离开",
+      onConfirm: () => {
+        navigate("/contactEdit");
+      },
+    });
   };
 
   // 选择
@@ -94,17 +95,19 @@ function Contacts({ selectConcate }) {
           value={item.id}
           icon={(checked) =>
             checked ? (
-              <SmileFill style={{ color: "var(--adm-color-primary)" }} />
+              <IconFont
+                iconName="xuanze3"
+                style={{ color: "var(--adm-color-primary)" }}
+              />
             ) : (
-              <SmileOutline style={{ color: "var(--adm-color-weak)" }} />
+              <IconFont
+                iconName="xuanze1"
+                style={{ color: "var(--adm-color-weak)" }}
+              />
             )
           }
         ></Radio>
-        <Card
-          onBodyClick={onBodyClick}
-          onHeaderClick={onHeaderClick}
-          style={{ borderRadius: "6px" }}
-        >
+        <Card style={{ borderRadius: "6px" }}>
           <div className="content">
             <p>
               {item.name} {item.mobile}

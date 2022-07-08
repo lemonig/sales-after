@@ -52,9 +52,9 @@ function Complain() {
   };
 
   const onSubmit = async () => {
+    await form.validateFields();
     const values = form.getFieldsValue();
     values.cityCode = values.cityCode[0];
-    console.log(values);
     let { success } = await complaintAdd(values);
     if (success) {
       Toast.show({

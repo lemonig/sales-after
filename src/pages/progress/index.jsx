@@ -29,12 +29,13 @@ import { workOrderDetail } from "../../api/workorder";
 import Item from "antd-mobile/es/components/dropdown/item";
 import { orderStatus } from "../../utils/constant";
 import moment from "moment";
+import IconFont from "../../components/IconFont";
 
 const demoSrc =
   "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60";
 const { Step } = Steps;
 
-const orderStatusList = ["未受理", "受理", "转派", "接单", "完工", "评价"];
+const orderStatusList = ["待受理", "受理", "转派", "接单", "完工", "评价"];
 function Progress() {
   let navigate = useNavigate();
   let id = new URLSearchParams(useLocation().search).get("id");
@@ -54,7 +55,7 @@ function Progress() {
     return pageData?.log?.map((item, index) => {
       let desc = "";
       if (index == 0) {
-        desc = "已结束";
+        desc = "";
       } else if (index == 1) {
         desc = "您的服务已完成，请对我们的服务进行评价";
       } else if (index == 2) {
@@ -78,7 +79,17 @@ function Progress() {
       );
     });
   };
-
+  const previewImg = () => {
+    console.log(!!pageData.wechat_url);
+    if (!pageData.wechat_url) {
+      Toast.show({
+        content: "二维码未上传",
+        afterClose: () => {},
+      });
+      return;
+    }
+    setImgVisible(true);
+  };
   return (
     <div className="progress-wrap">
       <TitleBar title="进度查询" />
@@ -93,7 +104,9 @@ function Progress() {
         </div>
         <div className="footer">
           服务工程师:{pageData?.service_engineer}
-          <span onClick={() => setImgVisible(true)}>》</span>
+          <span onClick={previewImg}>
+            <IconFont size="16" iconName="erweima1" />
+          </span>
         </div>
       </Card>
       <Card className="card-margin">

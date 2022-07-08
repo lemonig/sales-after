@@ -1,29 +1,37 @@
 import React from "react";
-import { Button, Space, Swiper, Toast, Divider, Grid } from "antd-mobile";
+import {
+  Button,
+  Space,
+  Swiper,
+  Toast,
+  Divider,
+  Grid,
+  Image,
+} from "antd-mobile";
 import { NavLink, Link, Outlet, useNavigate } from "react-router-dom";
 import IconFont from "../../components/IconFont";
-
+import bannerImg from "../../assets/img/banner.jpg";
 import "./index.less";
 
 const colors = ["#ace0ff"];
 const menuList = [
   {
-    icon: "",
+    icon: "gongdan-xinjiangongdancopy",
     name: "提交工单",
     path: "/work",
   },
   {
-    icon: "",
+    icon: "cylxr",
     name: "我的联系人",
     path: "/contacts",
   },
   {
-    icon: "",
+    icon: "wodegongdan",
     name: "我的工单",
     path: "/mywork",
   },
   {
-    icon: "",
+    icon: "tousu",
     name: "投诉建议",
     path: "/complain",
   },
@@ -31,7 +39,7 @@ const menuList = [
 const banner = colors.map((color, index) => (
   <Swiper.Item key={index}>
     <div className="content" style={{ background: color }}>
-      {index + 1}
+      <Image src={bannerImg} />
     </div>
   </Swiper.Item>
 ));

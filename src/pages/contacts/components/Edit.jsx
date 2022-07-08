@@ -48,6 +48,7 @@ function EditContact({ map, dispatch }) {
   };
 
   const submitForm = async () => {
+    await form.validateFields();
     const values = form.getFieldsValue();
     // values.address =
     //   mapAddr?.address?.city +
@@ -147,11 +148,8 @@ function EditContact({ map, dispatch }) {
           name="address"
           label="所在地区"
           extra={
-            <div
-              style={{ width: "16px", height: "16px", background: "#eee" }}
-              onClick={gotoLocation}
-            >
-              {/* <IconFont name="dingwei" className="" /> */}
+            <div onClick={gotoLocation}>
+              <IconFont iconName="dingwei" className="" />
             </div>
           }
           rules={formRule}

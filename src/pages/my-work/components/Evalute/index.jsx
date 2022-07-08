@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ListCard from "../ListCard";
 import "./index.less";
 import { workOrderList } from "../../../../api/workorder";
-
+import { Empty } from "antd-mobile";
 const Pagedata = [
   {
     tag: "信息咨询",
@@ -37,11 +37,15 @@ function Serve() {
   };
   return (
     <div>
-      {pageData.map((item, index) => (
-        <div className="card-item" key={index}>
-          <ListCard msg={item}></ListCard>
-        </div>
-      ))}
+      {pageData.length ? (
+        pageData.map((item, index) => (
+          <div className="card-item" key={index}>
+            <ListCard msg={item}></ListCard>
+          </div>
+        ))
+      ) : (
+        <Empty description="暂无数据" />
+      )}
     </div>
   );
 }
