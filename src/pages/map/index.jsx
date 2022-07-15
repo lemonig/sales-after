@@ -186,6 +186,13 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
               if (status === "complete" && result.info === "OK") {
                 setPoi(result.regeocodes[0].pois);
                 setAddress(result.regeocodes[0].addressComponent);
+              } else {
+                Toast.show({
+                  content: "地图出了点问题，请稍后再试",
+                  afterClose: () => {
+                    console.log("after");
+                  },
+                });
               }
             });
             // aMap.on("click", (e) => {

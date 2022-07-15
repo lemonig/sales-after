@@ -60,7 +60,7 @@ function EditContact({ map, dispatch }) {
     values.coordinate2 = mapAddr?.lnglat?.lat;
     console.log(values);
     if (isAdd) {
-      let { success } = await contactAdd(values);
+      let { success, data } = await contactAdd(values);
       if (success) {
         Toast.show({
           icon: "success",
@@ -69,13 +69,12 @@ function EditContact({ map, dispatch }) {
         back();
       } else {
         Toast.show({
-          icon: "fail",
-          content: "失败",
+          content: data,
         });
       }
     } else {
       values.id = id;
-      let { success } = await contactEdit(values);
+      let { success, data } = await contactEdit(values);
       if (success) {
         Toast.show({
           icon: "success",
@@ -84,8 +83,7 @@ function EditContact({ map, dispatch }) {
         back();
       } else {
         Toast.show({
-          icon: "fail",
-          content: "失败",
+          content: data,
         });
       }
     }
