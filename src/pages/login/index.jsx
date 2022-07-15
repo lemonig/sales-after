@@ -62,6 +62,7 @@ function Login() {
   };
   return (
     <div className="login-contain">
+      <p className="title">欢迎登录</p>
       <Form
         layout="horizontal"
         mode="card"
@@ -72,8 +73,11 @@ function Login() {
           </Button>
         }
       >
+        <Form.Item name="phone">
+          <Input placeholder="请输入手机号码" />
+        </Form.Item>
         <Form.Item
-          label="短信验证码"
+          name="code"
           extra={
             sendCoded ? (
               <span>{count}秒后重试</span>
@@ -83,12 +87,11 @@ function Login() {
               </Button>
             )
           }
-          name="phone"
         >
-          <Input placeholder="请输入" />
+          <Input placeholder="请输入短信验证码" />
         </Form.Item>
-        <Form.Item label="验证码" name="code">
-          <Input placeholder="请输入" />
+        <Form.Item name="name">
+          <Input placeholder="请输入您的姓名" />
         </Form.Item>
       </Form>
     </div>

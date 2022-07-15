@@ -7,13 +7,14 @@ import {
   Divider,
   Grid,
   Image,
+  Modal,
 } from "antd-mobile";
 import { NavLink, Link, Outlet, useNavigate } from "react-router-dom";
 import IconFont from "../../components/IconFont";
 import bannerImg from "../../assets/img/banner.jpg";
 import "./index.less";
 
-const colors = ["#ace0ff"];
+const colors = ["#1866BB"];
 const menuList = [
   {
     icon: "gongdan-xinjiangongdancopy",
@@ -38,17 +39,34 @@ const menuList = [
 ];
 const banner = colors.map((color, index) => (
   <Swiper.Item key={index}>
-    <div className="content" style={{ background: color }}>
-      <Image src={bannerImg} />
+    <div className="content">
+      <p>全面服务 专业保障</p>
+      <p>集成 仪器 软件</p>
+      {/* <Image src={bannerImg} /> */}
     </div>
   </Swiper.Item>
 ));
+
+const loginOut = () => {
+  Modal.confirm({
+    title: "提示",
+    content: "确认更换当前登录",
+    cancelText: "取消",
+    confirmText: "确认",
+    onConfirm: () => {
+      localStorage.clear();
+    },
+    onCancel: () => {
+      console.log("Confirmed");
+    },
+  });
+};
 
 const $menu = menuList.map((menu, index) => (
   <Grid.Item key={index}>
     <NavLink to={menu.path}>
       <div className="menu-item">
-        <IconFont iconName={menu.icon} size="16" />
+        <IconFont iconName={menu.icon} size="16" style={{ color: "#1866BB" }} />
         <p>{menu.name}</p>
       </div>
     </NavLink>
@@ -70,6 +88,12 @@ function Home() {
           {$menu}
         </Grid>
       </div>
+      <p className="login-out-btn">
+        登录手机号：13985214563{" "}
+        <a target="_blank" onClick={loginOut}>
+          退出登录
+        </a>
+      </p>
     </div>
   );
 }

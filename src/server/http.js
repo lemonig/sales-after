@@ -23,7 +23,7 @@ axios.interceptors.response.use(
   (response) => {
     console.log(response);
     if (response.data && response.status === 200) {
-      if (response.data.code == 401) {
+      if (response.data.error == "UNAUTHENTICATED") {
         // window.history.pushState('', null, '/login')
         window.location.href = "./login";
       }

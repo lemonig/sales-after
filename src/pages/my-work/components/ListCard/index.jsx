@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { AddOutline, EditSOutline, DeleteOutline } from "antd-mobile-icons";
 import "./index.less";
 import { orderStatus } from "../../../../utils/constant";
+import moment from "moment";
 
 function ListCard({ msg }) {
   let navigate = useNavigate();
@@ -28,21 +29,39 @@ function ListCard({ msg }) {
         <Tag color="#2db7f5">{orderStatus(msg.status)}</Tag>
       </div>
       <div className="content">
-        <p>{msg.gmt_create}</p>
-        <p>{msg.describe}</p>
+        <p>服务单号 {msg.service_code}</p>
+        <p>提交日期 {moment(msg.gmt_create).format("YYYY-MM-DD")}</p>
+        <p>描述 {msg.describe}</p>
+        <p>
+          {msg.submitter} {msg.cityName}
+        </p>
       </div>
       <div className="footer" onClick={(e) => e.stopPropagation()}>
         {msg.status === 5 ? (
-          <span onClick={() => gotoEnvalute(msg.id)}>
-            <EditSOutline color="var(--adm-color-primary)" />
+          <Button
+            color="primary"
+            fill="outline"
+            onClick={() => gotoEnvalute(msg.id)}
+            size="mini"
+          >
             去评价
-          </span>
-        ) : null}
-
-        <span onClick={() => gotoLookupProgress(msg.id)}>
-          {/* <DeleteOutline color="var(--adm-color-primary)" /> */}
+          </Button>
+        ) : // <span onClick={() => gotoEnvalute(msg.id)}>
+        //   <EditSOutline color="var(--adm-color-primary)" />
+        //   去评价
+        // </span>
+        null}
+        <Button
+          color="primary"
+          fill="outline"
+          onClick={() => gotoLookupProgress(msg.id)}
+          size="mini"
+        >
           进度查询
-        </span>
+        </Button>
+        {/* <span onClick={() => gotoLookupProgress(msg.id)}>
+          进度查询
+        </span> */}
       </div>
     </Card>
   );

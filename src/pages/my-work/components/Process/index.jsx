@@ -31,7 +31,6 @@ function Serve() {
 
   const getPageData = async () => {
     let { data } = await workOrderList(pageMsg);
-    console.log(data);
     let newData = data.filter((item) => {
       return item.status !== 5 && item.status !== 6;
     });
