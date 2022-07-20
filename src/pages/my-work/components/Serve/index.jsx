@@ -23,7 +23,7 @@ function Serve() {
   const [pageData, setPageData] = useState([]);
   const [pageMsg, setPagemsg] = useState({
     start_page: 1,
-    limit: 10,
+    limit: 10000,
   });
   useEffect(() => {
     getPageData();
@@ -31,7 +31,6 @@ function Serve() {
 
   const getPageData = async () => {
     let { data } = await workOrderList(pageMsg);
-    console.log(data);
     setPageData(data);
   };
   return (

@@ -39,7 +39,6 @@ function EditContact({ map, dispatch }) {
   }, []);
   const getPageData = async () => {
     let { data } = await contactGetId({ id: id * 1 });
-    console.log(data);
     form.setFieldsValue(data);
     setPageData(data);
   };
@@ -58,7 +57,6 @@ function EditContact({ map, dispatch }) {
     //   mapAddr?.address?.city;
     values.coordinate1 = mapAddr?.lnglat?.lng;
     values.coordinate2 = mapAddr?.lnglat?.lat;
-    console.log(values);
     if (isAdd) {
       let { success, data } = await contactAdd(values);
       if (success) {
@@ -101,7 +99,6 @@ function EditContact({ map, dispatch }) {
   // 地图选择
   const handkeSeleteAddr = (val) => {
     setShowMap(false);
-    console.log(val);
     setMapAddr(val);
     form.setFieldsValue({
       address:

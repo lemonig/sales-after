@@ -52,10 +52,10 @@ function Evalute() {
 
   const handleRateChange = (val) => {
     setScore(val);
-    console.log(val);
+    // console.log(val);
   };
   const handleTextChange = (val) => {
-    console.log(val);
+    // console.log(val);
     setDesc(val);
   };
   return (

@@ -19,14 +19,12 @@ function Contacts({ selectConcate }) {
 
   const getPageData = async () => {
     let { data } = await contactList();
-    console.log(data);
     setConcated(data[0].id);
 
     setPageData(data);
   };
 
   useEffect(() => {
-    console.log("联系人");
     getPageData();
   }, []);
 

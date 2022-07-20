@@ -122,8 +122,8 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
 
         //解析定位结果
         function onComplete(data) {
-          console.log(data);
-          console.log(data.position);
+          // console.log(data);
+          // console.log(data.position);
           // document.getElementById("status").innerHTML = "定位成功";
           // var str = [];
           // str.push("定位结果：" + data.position);
@@ -145,6 +145,7 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
         }
         //解析定位错误信息
         function onError(data) {
+          console.log(data);
           // document.getElementById("status").innerHTML = "定位失败";
           // document.getElementById("result").innerHTML =
           //   "失败原因排查信息:" +
@@ -161,10 +162,10 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
           // * 地图移动结束
           aMap.on("moveend", () => {
             setmapMove(true);
-            getCenterPoi(); // 获取地址----下面会做详细介绍
+            getCenterPoi(); // 获取地址
           });
           aMap.on("zoomend", () => {
-            getCenterPoi(); // 获取地址----下面会做详细介绍
+            getCenterPoi(); // 获取地址-
           });
         };
 
@@ -190,7 +191,7 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
                 Toast.show({
                   content: "地图出了点问题，请稍后再试",
                   afterClose: () => {
-                    console.log("after");
+                    // console.log("after");
                   },
                 });
               }
@@ -224,6 +225,7 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
           let pixel = aMap.lngLatToContainer(lnglat);
           console.log(pixel);
           setCenterPixel(pixel);
+          getCenterPoi(); // 获取地址
         }
         getLocation();
         setCenterIcon();
@@ -240,9 +242,6 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
   };
   const handleSelectAdress = (poi) => {
     let lnglat = aMap.getCenter();
-    console.log(lnglat);
-    console.log(poi);
-    console.log(address);
     handkeSeleteAddr({
       address,
       poi,

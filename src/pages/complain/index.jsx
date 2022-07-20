@@ -43,9 +43,7 @@ function Complain() {
 
   const [contactPopupVis, setContactPopupVis] = useState(false);
   const [concated, setConcated] = useState({}); //已选择的联系人
-  useEffect(() => {
-    console.log(form);
-  }, []);
+  useEffect(() => {}, []);
 
   const back = () => {
     navigate(-1, { replace: true });
@@ -55,6 +53,11 @@ function Complain() {
     await form.validateFields();
     const values = form.getFieldsValue();
     values.cityCode = values.cityCode[0];
+    if (Array.isArray(values.photo)) {
+      values.photo = values?.photo.map((item) => {
+        return item.url;
+      });
+    }
     let { success } = await complaintAdd(values);
     if (success) {
       Toast.show({
@@ -72,7 +75,6 @@ function Complain() {
 
   // 选择联系人
   const selectConcate = (val) => {
-    console.log(val);
     setConcated(val);
     setContactPopupVis(false);
     form.setFieldsValue({

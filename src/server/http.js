@@ -21,7 +21,6 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   (response) => {
-    console.log(response);
     if (response.data && response.status === 200) {
       if (response.data.error == "UNAUTHENTICATED") {
         // window.history.pushState('', null, '/login')
@@ -34,7 +33,6 @@ axios.interceptors.response.use(
   },
 
   (error) => {
-    console.log(error);
     if (error.response?.status) {
       switch (error.response.status) {
         case 401:

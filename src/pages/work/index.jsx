@@ -52,7 +52,6 @@ function Work() {
   const [concated, setConcated] = useState({}); //已选择的联系人
 
   useEffect(() => {
-    console.log(form);
     getTypePickerData();
   }, []);
 
@@ -71,7 +70,6 @@ function Work() {
 
   // 选择联系人
   const selectConcate = (val) => {
-    console.log(val);
     setConcated(val);
     setContactPopupVis(false);
     form.setFieldsValue({
@@ -80,13 +78,14 @@ function Work() {
   };
 
   const onSubmit = async () => {
-    console.log(fileList);
     await form.validateFields();
     const values = form.getFieldsValue();
-    console.log(values);
-    values.photo = values.photo.map((item) => {
-      return item.url;
-    });
+    if (Array.isArray(values.photo)) {
+      values.photo = values?.photo.map((item) => {
+        return item.url;
+      });
+    }
+
     values.fault_type_id = values.fault_type_id[0];
     values.cityCode = values.cityCode[0];
 

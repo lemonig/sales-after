@@ -10,13 +10,11 @@ function Contacts() {
   let navigate = useNavigate();
   const [pageData, setPageData] = useState([]);
   useEffect(() => {
-    console.log("联系人");
     getPageData();
   }, []);
 
   const getPageData = async () => {
     let { data } = await contactList();
-    console.log(data);
     setPageData(data);
   };
   const onClick = () => {

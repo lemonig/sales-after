@@ -30,6 +30,7 @@ function Login() {
     let { success, data } = await login(values);
     if (success) {
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data));
       navigate("/");
     } else {
       Toast.show(data);

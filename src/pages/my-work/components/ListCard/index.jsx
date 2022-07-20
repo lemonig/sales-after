@@ -31,37 +31,39 @@ function ListCard({ msg }) {
       <div className="content">
         <p>服务单号 {msg.service_code}</p>
         <p>提交日期 {moment(msg.gmt_create).format("YYYY-MM-DD")}</p>
-        <p>描述 {msg.describe}</p>
+        <p className="desc">描述 {msg.describe}</p>
         <p>
           {msg.submitter} {msg.cityName}
         </p>
       </div>
       <div className="footer" onClick={(e) => e.stopPropagation()}>
-        {msg.status === 5 ? (
+        <Space>
+          {msg.status === 5 ? (
+            <Button
+              color="primary"
+              fill="outline"
+              onClick={() => gotoEnvalute(msg.id)}
+              size="mini"
+            >
+              去评价
+            </Button>
+          ) : // <span onClick={() => gotoEnvalute(msg.id)}>
+          //   <EditSOutline color="var(--adm-color-primary)" />
+          //   去评价
+          // </span>
+          null}
           <Button
             color="primary"
             fill="outline"
-            onClick={() => gotoEnvalute(msg.id)}
+            onClick={() => gotoLookupProgress(msg.id)}
             size="mini"
           >
-            去评价
+            进度查询
           </Button>
-        ) : // <span onClick={() => gotoEnvalute(msg.id)}>
-        //   <EditSOutline color="var(--adm-color-primary)" />
-        //   去评价
-        // </span>
-        null}
-        <Button
-          color="primary"
-          fill="outline"
-          onClick={() => gotoLookupProgress(msg.id)}
-          size="mini"
-        >
-          进度查询
-        </Button>
-        {/* <span onClick={() => gotoLookupProgress(msg.id)}>
+          {/* <span onClick={() => gotoLookupProgress(msg.id)}>
           进度查询
         </span> */}
+        </Space>
       </div>
     </Card>
   );

@@ -30,12 +30,30 @@ import Item from "antd-mobile/es/components/dropdown/item";
 import { orderStatus } from "../../utils/constant";
 import moment from "moment";
 import IconFont from "../../components/IconFont";
+import { now } from "moment";
 
 const demoSrc =
   "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60";
 const { Step } = Steps;
 
-const orderStatusList = ["待受理", "受理", "转派", "接单", "完工", "评价"];
+const orderStatusList = [
+  {
+    txt: "已受理",
+    num: 2,
+  },
+  {
+    txt: "已接单",
+    num: 3 || 4,
+  },
+  {
+    txt: "完工",
+    num: 5,
+  },
+  {
+    txt: "评价",
+    num: 6,
+  },
+];
 function Progress() {
   let navigate = useNavigate();
   let id = new URLSearchParams(useLocation().search).get("id");
@@ -57,13 +75,13 @@ function Progress() {
       if (index == 0) {
         desc = "";
       } else if (index == 1) {
-        desc = "您的服务已完成，请对我们的服务进行评价";
-      } else if (index == 2) {
-        desc = "";
-      } else if (index == 3) {
-        desc = "服务工程师：" + item.user_name;
-      } else if (index == 4) {
         desc = "您的服务需求已被受理，正在给您安排服务工程师";
+      } else if (index == 2) {
+        desc = "服务工程师：" + item.user_name;
+      } else if (index == 3) {
+        desc = "";
+      } else if (index == 4) {
+        desc = "您的服务已完成，请对我们的服务进行评价";
       } else if (index == 5) {
         desc = "";
       }
@@ -80,7 +98,6 @@ function Progress() {
     });
   };
   const previewImg = () => {
-    console.log(!!pageData.wechat_url);
     if (!pageData.wechat_url) {
       Toast.show({
         content: "二维码未上传",
@@ -90,6 +107,23 @@ function Progress() {
     }
     setImgVisible(true);
   };
+  //获取自定义step 状态
+  const getStepStatus = (step, nowStep) => {
+    // 3\4同状态
+    if (nowStep == 2) {
+      nowStep += 1;
+    }
+    if (step <= nowStep) {
+      return "finish";
+    } else {
+      if (step == nowStep + 1) {
+        return "process";
+      } else {
+        return "wait";
+      }
+    }
+  };
+
   return (
     <div className="progress-wrap">
       <TitleBar title="进度查询" />
@@ -131,14 +165,60 @@ function Progress() {
         </List>
       </Card>
       <Card>
-        <Steps current={pageData.workOrder?.status}>
-          {orderStatusList?.map((item, index) => {
+        <Steps>
+          <Step
+            title="已受理"
+            status={getStepStatus(2, pageData.workOrder?.status)}
+            icon={
+              2 <= pageData.workOrder?.status ? (
+                <CheckCircleFill color="#DF9325" />
+              ) : (
+                <ClockCircleFill />
+              )
+            }
+          />
+          <Step
+            title="已接单"
+            status={getStepStatus(4, pageData.workOrder?.status)}
+            icon={
+              4 <= pageData.workOrder?.status ? (
+                <CheckCircleFill color="#DF9325" />
+              ) : (
+                <ClockCircleFill />
+              )
+            }
+          />
+          <Step
+            title="完工"
+            status={getStepStatus(5, pageData.workOrder?.status)}
+            icon={
+              5 <= pageData.workOrder?.status ? (
+                <CheckCircleFill color="#DF9325" />
+              ) : (
+                <ClockCircleFill />
+              )
+            }
+          />
+          <Step
+            title="评价"
+            status={getStepStatus(6, pageData.workOrder?.status)}
+            icon={
+              6 <= pageData.workOrder?.status ? (
+                <CheckCircleFill color="#DF9325" />
+              ) : (
+                <ClockCircleFill />
+              )
+            }
+          />
+
+          {/* {orderStatusList?.map((item, index) => {
             return (
               <Step
-                title={item}
-                key={index}
+                title={item.txt}
+                key={item.num}
+             
                 icon={
-                  index < pageData.workOrder?.status ? (
+                  item.num <= pageData.workOrder?.status ? (
                     <CheckCircleFill />
                   ) : (
                     <ClockCircleFill />
@@ -146,7 +226,7 @@ function Progress() {
                 }
               />
             );
-          })}
+          })} */}
         </Steps>
         <Steps direction="vertical">{$step()}</Steps>
       </Card>
