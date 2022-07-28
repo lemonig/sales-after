@@ -23,15 +23,22 @@ function ListCard({ msg }) {
   };
 
   return (
-    <Card style={{ borderRadius: "6px" }} className="list-card">
+    <Card
+      style={{ borderRadius: "6px" }}
+      className="list-card"
+      onBodyClick={() => gotoLookupProgress(msg.id)}
+    >
       <div className="head">
-        <Tag color="default">{msg.fault_type}</Tag>
-        <Tag color="#2db7f5">{orderStatus(msg.status)}</Tag>
+        {/* <Tag color="default">{msg.fault_type}</Tag> */}
       </div>
       <div className="content">
-        <p>服务单号 {msg.service_code}</p>
+        <p>
+          <span>服务单号 {msg.service_code}</span>
+
+          <Tag color="#2db7f5">{orderStatus(msg.status)}</Tag>
+        </p>
         <p>提交日期 {moment(msg.gmt_create).format("YYYY-MM-DD")}</p>
-        <p className="desc">描述 {msg.describe}</p>
+        <p className="desc"> {msg.describe}</p>
         <p>
           {msg.submitter} {msg.cityName}
         </p>

@@ -50,6 +50,7 @@ function Work() {
 
   const [contactPopupVis, setContactPopupVis] = useState(false); //联系人弹框vis
   const [concated, setConcated] = useState({}); //已选择的联系人
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getTypePickerData();
@@ -88,7 +89,7 @@ function Work() {
 
     values.fault_type_id = values.fault_type_id[0];
     values.cityCode = values.cityCode[0];
-
+    setLoading(true);
     let { success } = await workOrderAdd(values);
     if (success) {
       Toast.show({
@@ -102,6 +103,7 @@ function Work() {
         content: "失败",
       });
     }
+    setLoading(false);
     // })
   };
   return (
@@ -114,7 +116,13 @@ function Work() {
         // mode="card"
         form={form}
         footer={
-          <Button block color="primary" onClick={onSubmit} size="large">
+          <Button
+            block
+            color="primary"
+            onClick={onSubmit}
+            size="large"
+            loading={loading}
+          >
             提交
           </Button>
         }

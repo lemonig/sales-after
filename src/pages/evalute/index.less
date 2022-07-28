@@ -1,3 +1,4 @@
+@import url(../../styles/theme.less);
 .evalute-wrap {
   height: 100%;
   padding: 0 8px;
@@ -6,8 +7,59 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    margin-top: 16px;
   }
   .my-textarea {
     --font-size: 14px;
+  }
+  .evalute {
+    width: 100%;
+    margin-bottom: 32px;
+    p {
+      margin-bottom: 8px;
+    }
+  }
+  .menu-item {
+    color: @color-title;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .icon {
+    width: 40px;
+    height: 40px;
+    display: block;
+  }
+  .my-grid {
+    --gap-vertical: 30px;
+  }
+  .active {
+    color: #ffc400;
+  }
+
+  .quest {
+    width: 100%;
+    > p {
+      color: rgba(16, 16, 16, 100);
+      font-size: 16px;
+      font-weight: bold;
+      text-align: center;
+      width: 100%;
+    }
+    > div {
+      width: 100%;
+      // margin: 13px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-sizing: border-box;
+      margin: 16px 0 50px;
+    }
+    .my-button {
+      --background-color: #2db7f5;
+      --border-color: #2db7f5;
+      color: #fff;
+    }
   }
 }

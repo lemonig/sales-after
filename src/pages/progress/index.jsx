@@ -30,10 +30,7 @@ import Item from "antd-mobile/es/components/dropdown/item";
 import { orderStatus } from "../../utils/constant";
 import moment from "moment";
 import IconFont from "../../components/IconFont";
-import { now } from "moment";
 
-const demoSrc =
-  "https://images.unsplash.com/photo-1567945716310-4745a6b7844b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1500&q=60";
 const { Step } = Steps;
 
 const orderStatusList = [
@@ -71,18 +68,17 @@ function Progress() {
 
   const $step = () => {
     return pageData?.log?.map((item, index) => {
+      let { stage } = item;
       let desc = "";
-      if (index == 0) {
-        desc = "";
-      } else if (index == 1) {
+      if (stage === 2) {
         desc = "您的服务需求已被受理，正在给您安排服务工程师";
-      } else if (index == 2) {
+      } else if (stage === 3) {
         desc = "服务工程师：" + item.user_name;
-      } else if (index == 3) {
-        desc = "";
-      } else if (index == 4) {
+      } else if (stage === 4) {
+        desc = "服务工程师：" + item.user_name;
+      } else if (stage === 5) {
         desc = "您的服务已完成，请对我们的服务进行评价";
-      } else if (index == 5) {
+      } else if (stage === 6) {
         desc = "";
       }
       return (
@@ -92,7 +88,7 @@ function Progress() {
             "YYYY-MM-DD HH:mm"
           )}`}
           status="finish"
-          description={desc}
+          description={item.describe}
         />
       );
     });
@@ -137,10 +133,15 @@ function Progress() {
           服务单号: {pageData.workOrder?.service_code}
         </div>
         <div className="footer">
-          服务工程师:{pageData?.service_engineer}
-          <span onClick={previewImg}>
-            <IconFont size="16" iconName="erweima1" />
-          </span>
+          {pageData?.service_engineer ? (
+            <>
+              服务工程师:
+              {pageData.service_engineer}
+              <span onClick={previewImg}>
+                <IconFont size="16" iconName="erweima1" />
+              </span>
+            </>
+          ) : null}
         </div>
       </Card>
       <Card className="card-margin">
@@ -167,7 +168,7 @@ function Progress() {
       <Card>
         <Steps>
           <Step
-            title="已受理"
+            title="受理"
             status={getStepStatus(2, pageData.workOrder?.status)}
             icon={
               2 <= pageData.workOrder?.status ? (
@@ -178,7 +179,7 @@ function Progress() {
             }
           />
           <Step
-            title="已接单"
+            title="接单"
             status={getStepStatus(4, pageData.workOrder?.status)}
             icon={
               4 <= pageData.workOrder?.status ? (

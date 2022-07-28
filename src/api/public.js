@@ -13,3 +13,6 @@ export const captcha = (params) => {
 export const login = (params) => {
   return _post(`api/login`, params);
 };
+export const tokenCheck = (params) => {
+  return _post(`api/token/check`, params);
+};

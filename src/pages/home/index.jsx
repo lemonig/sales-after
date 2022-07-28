@@ -51,7 +51,7 @@ const $menu = menuList.map((menu, index) => (
   <Grid.Item key={index}>
     <NavLink to={menu.path}>
       <div className="menu-item">
-        <IconFont iconName={menu.icon} size="16" style={{ color: "#1866BB" }} />
+        <IconFont iconName={menu.icon} size="16" />
         <p>{menu.name}</p>
       </div>
     </NavLink>
@@ -91,7 +91,7 @@ function Home() {
             margin: "8px 0",
           }}
         ></Divider>
-        <Grid columns={3} gap={8}>
+        <Grid columns={3} gap={8} className="my-grid">
           {$menu}
         </Grid>
       </div>
