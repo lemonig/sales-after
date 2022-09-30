@@ -1,10 +1,10 @@
 import React, { RefObject, useEffect } from "react";
 import { Form, Input, Button, Toast } from "antd-mobile";
 import { captcha, login, tokenCheck } from "../../api/public";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./index.less";
 import { useState } from "react";
-import { _get } from "../../server/http";
+import { _get, _post } from "../../server/http";
 
 function Login() {
   let navigate = useNavigate();
@@ -12,10 +12,11 @@ function Login() {
 
   const [sendCoded, setSendCoded] = useState(false); //是否已发送验证码
   let [count, setCount] = useState(60); //倒计时
+  const [loading, setLoading] = useState(false);
+  let code = new URLSearchParams(useLocation().search).get("code");
 
   useEffect(() => {
-    isLogin();
-    // getTicket();
+    // isLogin();
   }, []);
 
   const isLogin = async () => {
@@ -28,15 +29,8 @@ function Login() {
     }
   };
 
-  let appSecret = "55e91f0b60d0d43ba81b97850d6a4ca6";
-  let appId = "wxdab09e765e958bef";
-  const getTicket = () => {
-    _get(
-      `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${appSecret}`
-    ).then((res) => {
-      console.log(res);
-    });
-  };
+  let appSecret = "e80259eb71f572241eeca948990837c1";
+  let appId = "wx8dff0d2efdec1139	";
 
   const wxLogin = () => {
     window.wx.config({
@@ -53,6 +47,7 @@ function Login() {
   const onSubmit = async () => {
     await form.validateFields();
     const values = form.getFieldsValue();
+    setLoading(true);
     let { success, data } = await login(values);
     if (success) {
       localStorage.setItem("token", data.token);
@@ -61,6 +56,7 @@ function Login() {
     } else {
       Toast.show(data);
     }
+    setLoading(false);
   };
   const sendCode = async () => {
     let phone = form.getFieldsValue("phone");
@@ -95,7 +91,13 @@ function Login() {
         mode="card"
         form={form}
         footer={
-          <Button block color="primary" onClick={onSubmit} size="large">
+          <Button
+            block
+            color="primary"
+            onClick={onSubmit}
+            size="large"
+            loading={loading}
+          >
             提交
           </Button>
         }

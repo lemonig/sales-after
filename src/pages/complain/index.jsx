@@ -43,6 +43,8 @@ function Complain() {
 
   const [contactPopupVis, setContactPopupVis] = useState(false);
   const [concated, setConcated] = useState({}); //已选择的联系人
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {}, []);
 
   const back = () => {
@@ -58,6 +60,7 @@ function Complain() {
         return item.url;
       });
     }
+    setLoading(true);
     let { success } = await complaintAdd(values);
     if (success) {
       Toast.show({
@@ -71,6 +74,7 @@ function Complain() {
         content: "失败",
       });
     }
+    setLoading(false);
   };
 
   // 选择联系人
@@ -91,7 +95,13 @@ function Complain() {
         // mode="card"
         form={form}
         footer={
-          <Button block color="primary" onClick={onSubmit} size="large">
+          <Button
+            block
+            color="primary"
+            onClick={onSubmit}
+            size="large"
+            loading={loading}
+          >
             提交
           </Button>
         }
@@ -120,7 +130,13 @@ function Complain() {
           trigger="onConfirm"
         >
           <Picker columns={[provinceList]}>
-            {([value]) => (value ? value.label : "请选择")}
+            {([value]) =>
+              value ? (
+                value.label
+              ) : (
+                <span className="placer-hoder-text">请选择</span>
+              )
+            }
           </Picker>
         </Form.Item>
 

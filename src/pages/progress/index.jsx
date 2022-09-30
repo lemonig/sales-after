@@ -43,11 +43,11 @@ const orderStatusList = [
     num: 3 || 4,
   },
   {
-    txt: "完工",
+    txt: "已完工",
     num: 5,
   },
   {
-    txt: "评价",
+    txt: "已评价",
     num: 6,
   },
 ];
@@ -103,10 +103,10 @@ function Progress() {
     }
     setImgVisible(true);
   };
-  //获取自定义step 状态
+  //获取自定义step 状态 2:已受理 ,3：已接单 4:转派 5:完工, 6：已评价
   const getStepStatus = (step, nowStep) => {
     // 3\4同状态
-    if (nowStep == 2) {
+    if (nowStep == 2 || nowStep == 3) {
       nowStep += 1;
     }
     if (step <= nowStep) {
@@ -125,7 +125,7 @@ function Progress() {
       <TitleBar title="进度查询" />
       <Card className="card-margin">
         <div className="head">
-          <Avatar src={pageData.wechat_url} />
+          <Avatar src={pageData.workOrder?.head_url} />
           <p>{pageData.workOrder?.submitter}</p>
           <p>{pageData.workOrder?.submitter_company}</p>
         </div>
@@ -148,6 +148,7 @@ function Progress() {
         <List className="my-list">
           <List.Item prefix={"省份"}>{pageData.workOrder?.cityName}</List.Item>
           <List.Item prefix={"描述"}>{pageData.workOrder?.describe}</List.Item>
+          <List.Item prefix={"产品型号"}>{pageData.workOrder?.model}</List.Item>
 
           <List.Item prefix={"照片"}>
             <Space wrap>
@@ -182,7 +183,7 @@ function Progress() {
             title="接单"
             status={getStepStatus(4, pageData.workOrder?.status)}
             icon={
-              4 <= pageData.workOrder?.status ? (
+              3 <= pageData.workOrder?.status ? (
                 <CheckCircleFill color="#DF9325" />
               ) : (
                 <ClockCircleFill />

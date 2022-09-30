@@ -71,11 +71,13 @@ function Work() {
 
   // 选择联系人
   const selectConcate = (val) => {
-    setConcated(val);
-    setContactPopupVis(false);
-    form.setFieldsValue({
-      linkman_id: val.id,
-    });
+    if (!!val) {
+      setConcated(val);
+      setContactPopupVis(false);
+      form.setFieldsValue({
+        linkman_id: val.id,
+      });
+    }
   };
 
   const onSubmit = async () => {
@@ -150,7 +152,13 @@ function Work() {
           trigger="onConfirm"
         >
           <Picker columns={typePickerData}>
-            {([value]) => (value ? value.label : "请选择")}
+            {([value]) =>
+              value ? (
+                value.label
+              ) : (
+                <span className="placer-hoder-text">请选择</span>
+              )
+            }
           </Picker>
         </Form.Item>
 
@@ -164,7 +172,13 @@ function Work() {
           trigger="onConfirm"
         >
           <Picker columns={[provinceList]}>
-            {([value]) => (value ? value.label : "请选择")}
+            {([value]) =>
+              value ? (
+                value.label
+              ) : (
+                <span className="placer-hoder-text">请选择</span>
+              )
+            }
           </Picker>
         </Form.Item>
 

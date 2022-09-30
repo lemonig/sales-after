@@ -26,6 +26,9 @@ module.exports = {
       if (isPro(env)) {
         webpackConfig.mode = "production";
         webpackConfig.devtool = "source-map";
+        // webpackConfig.output = {
+        //   path: path.resolve(__dirname, "dist"),
+        // };
         webpackConfig.plugins.push(
           new UglifyJsPlugin({
             uglifyOptions: {
@@ -63,6 +66,8 @@ module.exports = {
     alias: {
       "@Components": pathResolve("src/components"),
       "@": pathResolve("src"),
+      "@Store": pathResolve("src/store"),
+      "@Util": pathResolve("src/util"),
     },
   },
   babel: {

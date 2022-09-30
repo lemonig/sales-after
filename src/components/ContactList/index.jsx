@@ -19,7 +19,9 @@ function Contacts({ selectConcate }) {
 
   const getPageData = async () => {
     let { data } = await contactList();
-    setConcated(data[0].id);
+    if (data.length) {
+      setConcated(data[0].id);
+    }
 
     setPageData(data);
   };
@@ -53,13 +55,13 @@ function Contacts({ selectConcate }) {
       },
     });
   };
-  const handleEditContact = () => {
+  const handleEditContact = (id) => {
     Modal.confirm({
       content: "离开本页将不保存任何信息，是否离开",
       onConfirm: () => {
         navigate({
           pathname: "/contactEdit",
-          search: "?id=1",
+          search: `?id=${id}`,
         });
       },
     });
@@ -82,7 +84,11 @@ function Contacts({ selectConcate }) {
     let res = pageData.filter((item) => {
       return item.id === concated;
     });
-    selectConcate(res[0]);
+    if (res.length) {
+      selectConcate(res[0]);
+    } else {
+      selectConcate("");
+    }
   };
 
   const $concat = () => {
@@ -108,8 +114,9 @@ function Contacts({ selectConcate }) {
         <Card style={{ borderRadius: "6px" }}>
           <div className="content">
             <p>
-              {item.name} {item.mobile}
+              {item.name} {item.company_name}
             </p>
+            <p>{item.mobile}</p>
             <p>{item.address}</p>
           </div>
           <div className="footer" onClick={(e) => e.stopPropagation()}>
@@ -117,7 +124,7 @@ function Contacts({ selectConcate }) {
               <DeleteOutline color="var(--adm-color-primary)" />
               删除
             </span>
-            <span onClick={handleEditContact}>
+            <span onClick={() => handleEditContact(item.id)}>
               <EditSOutline color="var(--admhandleAddConcate-color-primary)" />
               编辑
             </span>

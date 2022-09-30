@@ -6,19 +6,23 @@ import Evalute from "./components/Evalute";
 import Process from "./components/Process";
 import TitleBar from "@Components/TitleBar";
 import "./index.less";
+import { connect } from "react-redux";
+import { tabAction } from "@Store/actions/tab-action";
+import store from "@Store";
 
-function MyWork() {
+function MyWork({ tab }) {
+  const handleTabChange = (key) => store.dispatch(tabAction.selectTab(key));
   return (
     <div className="my-work">
       <TitleBar title="我的服务单" />
-      <Tabs>
-        <Tabs.Tab title="所有服务" key="fruits" destroyOnClose>
+      <Tabs onChange={handleTabChange} activeKey={tab.value}>
+        <Tabs.Tab title="所有服务" key="1" destroyOnClose>
           <Serve />
         </Tabs.Tab>
-        <Tabs.Tab title="进行中" key="vegetables" destroyOnClose>
+        <Tabs.Tab title="进行中" key="2" destroyOnClose>
           <Process></Process>
         </Tabs.Tab>
-        <Tabs.Tab title="待评价" key="animals" destroyOnClose>
+        <Tabs.Tab title="待评价" key="3" destroyOnClose>
           <Evalute></Evalute>
         </Tabs.Tab>
       </Tabs>
@@ -26,4 +30,5 @@ function MyWork() {
   );
 }
 
-export default MyWork;
+const mapStateToProps = (state) => state;
+export default connect(mapStateToProps)(MyWork);

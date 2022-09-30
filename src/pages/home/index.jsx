@@ -8,11 +8,24 @@ import {
   Grid,
   Image,
   Modal,
+  Popup,
+  Form,
+  Input,
+  Checkbox,
+  Radio,
 } from "antd-mobile";
-import { NavLink, Link, Outlet, useNavigate } from "react-router-dom";
+import {
+  NavLink,
+  Link,
+  Outlet,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import IconFont from "../../components/IconFont";
 import bannerImg from "../../assets/img/banner.jpg";
 import "./index.less";
+import { captcha, login, tokenCheck } from "../../api/public";
+import { _get, _post } from "../../server/http";
 
 const colors = ["#1866BB"];
 const menuList = [
@@ -59,10 +72,24 @@ const $menu = menuList.map((menu, index) => (
 ));
 function Home() {
   let navigate = useNavigate();
-  let [user, setUser] = useState();
+  let code = new URLSearchParams(useLocation().search).get("code");
+
+  const [popupVis, setPopupVis] = useState(false);
+
+  const [form] = Form.useForm();
+  const [sendCoded, setSendCoded] = useState(false); //是否已发送验证码
+  let [count, setCount] = useState(60); //倒计时
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    setUser(user);
+    console.log("code-----------" + code);
+    if (code) {
+      _post(`api/login`, { code: code }).then((res) => {
+        if (res.success) {
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("user", JSON.stringify(res.data));
+        }
+      });
+    }
   }, []);
 
   const loginOut = () => {
@@ -80,6 +107,7 @@ function Home() {
       },
     });
   };
+
   return (
     <div className="home-wrap">
       <Swiper>{banner}</Swiper>
@@ -95,12 +123,12 @@ function Home() {
           {$menu}
         </Grid>
       </div>
-      <p className="login-out-btn">
+      {/* <p className="login-out-btn">
         登录手机号：{user?.mobile}
         <a target="_blank" onClick={loginOut}>
           退出登录
         </a>
-      </p>
+      </p> */}
     </div>
   );
 }

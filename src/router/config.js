@@ -1,5 +1,5 @@
 import * as React from "react";
-const Login = React.lazy(() => import("../pages/login"));
+const Login = React.lazy(() => import("../pages/loginToHome"));
 const BodyLayout = React.lazy(() => import("../containers/layout-body"));
 const Home = React.lazy(() => import("../pages/home"));
 const Work = React.lazy(() => import("../pages/work")); //工单

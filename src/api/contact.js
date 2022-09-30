@@ -19,3 +19,7 @@ export const contactDelete = (params) => {
 export const contactGetId = (params) => {
   return _post(`/api/LinkMan/getById`, params);
 };
+// 所属公司
+export const companyList = (params) => {
+  return _post(`/api/Company/list`, params);
+};
