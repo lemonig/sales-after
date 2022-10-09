@@ -2,6 +2,13 @@
   height: 100%;
   padding: 0 8px 8px;
   overflow: auto;
+  // background: linear-gradient(rgb(103, 103, 175) 20px, white 80%);
+  background: linear-gradient(
+    to bottom,
+    rgb(103, 103, 175) 28px,
+    white 77%,
+    white
+  );
 
   .head {
     display: flex;
@@ -13,7 +20,7 @@
     }
   }
   .card-margin {
-    // margin-bottom: 18px;
+    margin-bottom: 8px;
     .footer,
     .content {
       display: flex;
@@ -23,6 +30,9 @@
   }
   .my-list {
     --font-size: 14px;
-    --border-top: none;
+    --border-top: none !important;
+    :global(.adm-list-item-content) {
+      border-top: none;
+    }
   }
 }

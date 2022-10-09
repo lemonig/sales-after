@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Card,
   Toast,
@@ -53,8 +53,10 @@ const orderStatusList = [
 ];
 function Progress() {
   let navigate = useNavigate();
+  const imageViewerRef = useRef(null);
   let id = new URLSearchParams(useLocation().search).get("id");
   const [imgVisible, setImgVisible] = useState(false);
+  const [imgMVisible, setImgMVisible] = useState(false);
   const [pageData, setPageData] = useState({});
 
   useEffect(() => {
@@ -79,7 +81,7 @@ function Progress() {
       } else if (stage === 5) {
         desc = "您的服务已完成，请对我们的服务进行评价";
       } else if (stage === 6) {
-        desc = "";
+        desc = item.data.remark;
       }
       return (
         <Step
@@ -87,7 +89,7 @@ function Progress() {
           title={`${orderStatus(item.stage)}   ${moment(item.gmt_create).format(
             "YYYY-MM-DD HH:mm"
           )}`}
-          status="finish"
+          status={index == 0 ? "process" : "wait"}
           description={item.describe}
         />
       );
@@ -124,45 +126,78 @@ function Progress() {
     <div className="progress-wrap">
       <TitleBar title="进度查询" />
       <Card className="card-margin">
-        <div className="head">
+        <List className="my-list no-border">
+          <List.Item prefix={<Avatar src={pageData.workOrder?.head_url} />}>
+            <p>{pageData.workOrder?.submitter}</p>
+            <p>{pageData.workOrder?.submitter_company}</p>
+          </List.Item>
+          <List.Item prefix={"服务单号"}>
+            {pageData.workOrder?.service_code}
+          </List.Item>
+          <List.Item prefix={"服务工程师"}>
+            {pageData.service_engineer}
+            <span onClick={previewImg}>
+              <IconFont
+                size="16"
+                iconName="erweima1"
+                style={{ margin: "0 6px" }}
+              />
+            </span>
+          </List.Item>
+        </List>
+        {/* <div className="head">
           <Avatar src={pageData.workOrder?.head_url} />
           <p>{pageData.workOrder?.submitter}</p>
           <p>{pageData.workOrder?.submitter_company}</p>
-        </div>
-        <div className="content">
-          服务单号: {pageData.workOrder?.service_code}
+        </div> */}
+        {/* <div className="content">
+          服务单号 {pageData.workOrder?.service_code}
         </div>
         <div className="footer">
           {pageData?.service_engineer ? (
             <>
-              服务工程师:
+              服务工程师
               {pageData.service_engineer}
               <span onClick={previewImg}>
                 <IconFont size="16" iconName="erweima1" />
               </span>
             </>
           ) : null}
-        </div>
+        </div> */}
       </Card>
       <Card className="card-margin">
         <List className="my-list">
-          <List.Item prefix={"省份"}>{pageData.workOrder?.cityName}</List.Item>
-          <List.Item prefix={"描述"}>{pageData.workOrder?.describe}</List.Item>
-          <List.Item prefix={"产品型号"}>{pageData.workOrder?.model}</List.Item>
+          <List.Item prefix={"省份"}>
+            {pageData.workOrder?.cityName ?? "--"}
+          </List.Item>
+          <List.Item prefix={"描述"}>
+            {pageData.workOrder?.describe ?? "--"}
+          </List.Item>
+          <List.Item prefix={"产品型号"}>
+            {pageData.workOrder?.model ?? "--"}
+          </List.Item>
 
           <List.Item prefix={"照片"}>
-            <Space wrap>
-              {pageData.workOrder?.photo?.map((item, index) => (
-                <Image
-                  key={index}
-                  src={item}
-                  width={64}
-                  height={64}
-                  fit="cover"
-                  style={{ borderRadius: 4 }}
-                />
-              ))}
-            </Space>
+            {pageData.workOrder?.photo.length > 0 ? (
+              <Space wrap>
+                {pageData.workOrder?.photo?.map((item, index) => (
+                  <Image
+                    key={index}
+                    src={item}
+                    width={64}
+                    height={64}
+                    fit="cover"
+                    style={{ borderRadius: 4 }}
+                    onClick={() => {
+                      setImgMVisible(true);
+                      imageViewerRef.current.swipeTo(index, true);
+                    }}
+                  />
+                ))}
+              </Space>
+            ) : (
+              "--"
+            )}
           </List.Item>
         </List>
       </Card>
@@ -237,6 +272,14 @@ function Progress() {
         visible={imgVisible}
         onClose={() => {
           setImgVisible(false);
+        }}
+      />
+      <ImageViewer.Multi
+        ref={imageViewerRef}
+        images={pageData.workOrder?.photo}
+        visible={imgMVisible}
+        onClose={() => {
+          setImgMVisible(false);
         }}
       />
     </div>

@@ -52,6 +52,7 @@ function EditContact({ map, dispatch }) {
   }, []);
   const getPageData = async () => {
     let { data } = await contactGetId({ id: id * 1 });
+    data.company_code = [data.company_code];
     form.setFieldsValue(data);
     setPageData(data);
   };
@@ -83,7 +84,6 @@ function EditContact({ map, dispatch }) {
     values.coordinate2 = mapAddr?.lnglat?.lat;
     values.company_code = values.company_code[0];
     setLoading(true);
-    console.log(values);
     if (isAdd) {
       let { success, data } = await contactAdd(values);
       if (success) {
@@ -150,73 +150,77 @@ function EditContact({ map, dispatch }) {
       <NavBar back="返回" onBack={back}>
         {isAdd ? "新建" : "管理"}联系人
       </NavBar>
-      <Form
-        form={form}
-        layout="horizontal"
-        mode="card"
-        footer={
-          <Button
-            block
-            color="primary"
-            size="large"
-            onClick={submitForm}
-            loading={loading}
-          >
-            提交
-          </Button>
-        }
-      >
-        <Form.Header>联系人信息</Form.Header>
-
-        <Form.Item
-          label="选择所属公司"
-          name="company_code"
-          rules={[{ required: true }]}
-          onClick={(e, comPickerRef) => {
-            comPickerRef.current?.open();
-          }}
-          trigger="onConfirm"
-        >
-          <Picker columns={[componanyList]}>
-            {([value]) =>
-              value ? (
-                value.label
-              ) : (
-                <span className="placer-hoder-text">请选择</span>
-              )
-            }
-          </Picker>
-        </Form.Item>
-        <Form.Item label="联系人" name="name" rules={formRule}>
-          <Input placeholder="请输入" />
-        </Form.Item>
-        <Form.Item label="手机号" rules={formRule} name="mobile">
-          <Input placeholder="请输入" />
-        </Form.Item>
-
-        <Form.Item
-          name="address"
-          label="所在地区"
-          extra={
-            <div onClick={gotoLocation}>
-              <IconFont iconName="dingwei" className="" />
-            </div>
+      {componanyList.length && (
+        <Form
+          form={form}
+          layout="horizontal"
+          mode="card"
+          footer={
+            <Button
+              block
+              color="primary"
+              size="large"
+              onClick={submitForm}
+              loading={loading}
+            >
+              提交
+            </Button>
           }
-          rules={formRule}
         >
-          <Input placeholder="请输入" />
-          {/* <p>
-            {mapAddr?.address?.city}
-            {mapAddr?.address?.district}
-            {mapAddr?.address?.township}
-            {mapAddr?.address?.street}
-          </p> */}
-        </Form.Item>
-        <Form.Item label="详细地址" rules={formRule} name="detailed_address">
-          <Input placeholder="请输入" />
-          {/* <p>{mapAddr?.poi.name}</p> */}
-        </Form.Item>
-      </Form>
+          <Form.Header>联系人信息</Form.Header>
+
+          <Form.Item
+            label="选择所属公司"
+            name="company_code"
+            rules={[{ required: true }]}
+            onClick={(e, comPickerRef) => {
+              comPickerRef.current?.open();
+            }}
+            trigger="onConfirm"
+          >
+            {
+              <Picker columns={[componanyList]}>
+                {([value]) =>
+                  value ? (
+                    value.label
+                  ) : (
+                    <span className="placer-hoder-text">请选择</span>
+                  )
+                }
+              </Picker>
+            }
+          </Form.Item>
+          <Form.Item label="联系人" name="name" rules={formRule}>
+            <Input placeholder="请输入" />
+          </Form.Item>
+          <Form.Item label="手机号" rules={formRule} name="mobile">
+            <Input placeholder="请输入" />
+          </Form.Item>
+
+          <Form.Item
+            name="address"
+            label="所在地区"
+            extra={
+              <div onClick={gotoLocation}>
+                <IconFont iconName="dingwei" className="" />
+              </div>
+            }
+            rules={formRule}
+          >
+            <Input placeholder="请输入" />
+            {/* <p>
+             {mapAddr?.address?.city}
+             {mapAddr?.address?.district}
+             {mapAddr?.address?.township}
+             {mapAddr?.address?.street}
+           </p> */}
+          </Form.Item>
+          <Form.Item label="详细地址" rules={formRule} name="detailed_address">
+            <Input placeholder="请输入" />
+            {/* <p>{mapAddr?.poi.name}</p> */}
+          </Form.Item>
+        </Form>
+      )}
     </div>
   );
 }

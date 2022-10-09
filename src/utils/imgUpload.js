@@ -1,5 +1,7 @@
 import { contactList } from "../api/public";
 import { compressImage } from "./public";
+import { ImageUploader, Space, Toast, Dialog } from "antd-mobile";
+
 function sleep(time) {
   setTimeout(() => {}, time);
 }
@@ -19,4 +21,12 @@ export async function mockUpload(file) {
 export async function mockUploadFail() {
   await sleep(3000);
   throw new Error("Fail to upload");
+}
+
+export async function beforeUpload(file) {
+  if (file.size > 10 * 1024 * 1024) {
+    Toast.show("请选择小于 10M 的图片");
+    return null;
+  }
+  return file;
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ListCard from "../ListCard";
 import "./index.less";
 import { workOrderList } from "../../../../api/workorder";
-import { Empty } from "antd-mobile";
+import { Empty, Divider } from "antd-mobile";
 const Pagedata = [
   {
     tag: "信息咨询",
@@ -36,13 +36,16 @@ function Serve() {
     setPageData(newData);
   };
   return (
-    <div>
+    <div className="my-work-page">
       {pageData.length ? (
-        pageData.map((item, index) => (
-          <div className="card-item" key={index}>
-            <ListCard msg={item}></ListCard>
-          </div>
-        ))
+        <>
+          {pageData.map((item, index) => (
+            <div className="card-item" key={index}>
+              <ListCard msg={item}></ListCard>
+            </div>
+          ))}
+          <Divider>没有更多了</Divider>
+        </>
       ) : (
         <Empty description="暂无数据" />
       )}

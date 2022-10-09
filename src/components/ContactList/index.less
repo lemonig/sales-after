@@ -1,21 +1,25 @@
 .contacts-wrap {
   padding: 0 8px;
+  height: 100%;
   .btn-top {
     text-align: center;
     margin: 16px 0px 8px;
   }
 
   .content {
+    background-color: #f5f7fa;
+    padding: 0 8px;
     p {
       padding: 8px 0;
     }
   }
 
   .footer {
-    padding-top: 11px;
+    padding: 11px 0;
     border-top: 1px solid #e5e5e5;
     display: flex;
     justify-content: flex-end;
+    background-color: #f5f7fa;
   }
   .footer span:last-child {
     margin: 0 8px;
@@ -23,6 +27,12 @@
 
   .customBody {
     color: var(--adm-color-success);
+  }
+  .contact-list {
+    height: 80%;
+    overflow-y: auto;
+    padding-bottom: 50px;
+    box-sizing: border-box;
   }
   .contact-list > .list-item {
     display: flex;

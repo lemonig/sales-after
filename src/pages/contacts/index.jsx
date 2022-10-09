@@ -66,12 +66,7 @@ function Contacts() {
 
   const $card = () => {
     return pageData.map((item) => (
-      <Card
-        key={item.id}
-        onBodyClick={onBodyClick}
-        onHeaderClick={onHeaderClick}
-        style={{ borderRadius: "6px" }}
-      >
+      <Card key={item.id} style={{ borderRadius: "6px" }}>
         <div className="content">
           <p>
             {item.name} {item.mobile}

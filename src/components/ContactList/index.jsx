@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Card, Toast, Button, NavBar, Space, Modal, Radio } from "antd-mobile";
+import {
+  Card,
+  Toast,
+  Button,
+  NavBar,
+  Space,
+  Modal,
+  Radio,
+  Divider,
+} from "antd-mobile";
 import "./index.less";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,10 +29,16 @@ function Contacts({ selectConcate }) {
   const getPageData = async () => {
     let { data } = await contactList();
     if (data.length) {
+      data.map((item, idx) => {
+        if (idx == 0) {
+          item.checked = true;
+        } else {
+          item.checked = false;
+        }
+      });
       setConcated(data[0].id);
+      setPageData(data);
     }
-
-    setPageData(data);
   };
 
   useEffect(() => {
@@ -40,7 +55,6 @@ function Contacts({ selectConcate }) {
       cancelText: "取消",
       confirmText: "确认",
       onConfirm: () => {
-        console.log("Confirmed");
         let { success } = contactDelete({ id: id });
         if (success) {
           Toast.show({
@@ -77,6 +91,13 @@ function Contacts({ selectConcate }) {
 
   // 选择
   const handleSelectChange = (val) => {
+    pageData.map((ele) => {
+      if (ele.id == val) {
+        ele.checked = true;
+      } else {
+        ele.checked = false;
+      }
+    });
     setConcated(val);
   };
   // 确认
@@ -98,7 +119,7 @@ function Contacts({ selectConcate }) {
           className="my-radio"
           value={item.id}
           icon={(checked) =>
-            checked ? (
+            item.checked ? (
               <IconFont
                 iconName="xuanze3"
                 style={{ color: "var(--adm-color-primary)" }}
@@ -112,7 +133,12 @@ function Contacts({ selectConcate }) {
           }
         ></Radio>
         <Card style={{ borderRadius: "6px" }}>
-          <div className="content">
+          <div
+            className="content"
+            onClick={() => {
+              handleSelectChange(item.id);
+            }}
+          >
             <p>
               {item.name} {item.company_name}
             </p>
@@ -154,6 +180,7 @@ function Contacts({ selectConcate }) {
           {$concat()}
         </Radio.Group>
       </div>
+      <Divider></Divider>
       <div className="btn-bottom">
         <Button
           color="primary"

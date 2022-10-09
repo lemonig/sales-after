@@ -19,7 +19,12 @@ import {
 } from "antd-mobile";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { demoSrc, mockUpload, mockUploadFail } from "../../utils/imgUpload";
+import {
+  demoSrc,
+  mockUpload,
+  mockUploadFail,
+  beforeUpload,
+} from "../../utils/imgUpload";
 import provinceJSON from "../../utils/province.json";
 import ContactList from "../../components/ContactList";
 import { complaintAdd } from "../../api/complain";
@@ -154,6 +159,8 @@ function Complain() {
             value={fileList}
             onChange={setFileList}
             upload={mockUpload}
+            maxCount={3}
+            beforeUpload={beforeUpload}
           />
         </Form.Item>
         <Form.Header />
