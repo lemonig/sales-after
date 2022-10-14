@@ -1,20 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AMapLoader from "@amap/amap-jsapi-loader";
-import {
-  Card,
-  Toast,
-  Button,
-  NavBar,
-  Space,
-  Modal,
-  List,
-  Switch,
-} from "antd-mobile";
-import {
-  UnorderedListOutline,
-  PayCircleOutline,
-  SetOutline,
-} from "antd-mobile-icons";
+import { Toast, NavBar, List } from "antd-mobile";
+
 import { useNavigate } from "react-router-dom";
 import "./index.less";
 import locationPng from "../../assets/img/location.png";
@@ -90,9 +77,10 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
             var geolocation = new AMap.Geolocation({
               enableHighAccuracy: false, //是否使用高精度定位，默认:true
               noIpLocate: 0, //0:可以使用IP定位
+              noGeoLocation: 0, //否禁止使用浏览器Geolocation定位，默认值为0，可选值0-3
               showButton: true, //显示定位按钮，默认：true
               maximumAge: 0, //定位结果缓存0毫秒，默认：0
-              timeout: 10000, //超过10秒后停止定位，默认：5s
+              timeout: 100000, //超过10秒后停止定位，默认：5s
               position: "RB", //定位按钮的停靠位置
               showCircle: false, //定位成功后用圆圈表示定位精度范围，默认：true
               showMarker: false, //定位成功时是否在定位位置显示一个Marker
@@ -111,6 +99,7 @@ function Map({ handleMapBack, handkeSeleteAddr, lnglat }) {
             aMap.addControl(geolocation);
             geolocation.getCurrentPosition(function (status, result) {
               // aMap.clearMap();
+              console.log(result);
               if (status == "complete") {
                 onComplete(result);
               } else {

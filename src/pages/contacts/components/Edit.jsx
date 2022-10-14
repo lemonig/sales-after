@@ -52,7 +52,6 @@ function EditContact({ map, dispatch }) {
   }, []);
   const getPageData = async () => {
     let { data } = await contactGetId({ id: id * 1 });
-    data.company_code = [data.company_code];
     form.setFieldsValue(data);
     setPageData(data);
   };
@@ -82,7 +81,6 @@ function EditContact({ map, dispatch }) {
     //   mapAddr?.address?.city;
     values.coordinate1 = mapAddr?.lnglat?.lng;
     values.coordinate2 = mapAddr?.lnglat?.lat;
-    values.company_code = values.company_code[0];
     setLoading(true);
     if (isAdd) {
       let { success, data } = await contactAdd(values);
@@ -139,6 +137,13 @@ function EditContact({ map, dispatch }) {
     });
   };
 
+  const checkMobile = (_, value) => {
+    if (value.realValue) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error("手机号不能为空!"));
+  };
+
   return showMap ? (
     <Map
       handleMapBack={handleMapBack}
@@ -170,15 +175,12 @@ function EditContact({ map, dispatch }) {
           <Form.Header>联系人信息</Form.Header>
 
           <Form.Item
-            label="选择所属公司"
-            name="company_code"
-            rules={[{ required: true }]}
-            onClick={(e, comPickerRef) => {
-              comPickerRef.current?.open();
-            }}
-            trigger="onConfirm"
+            label="联系人公司"
+            name="linkman_company"
+            rules={[{ required: true }, { type: "string", max: 20 }]}
           >
-            {
+            <Input placeholder="请输入" />
+            {/* {
               <Picker columns={[componanyList]}>
                 {([value]) =>
                   value ? (
@@ -188,13 +190,17 @@ function EditContact({ map, dispatch }) {
                   )
                 }
               </Picker>
-            }
+            } */}
           </Form.Item>
-          <Form.Item label="联系人" name="name" rules={formRule}>
+          <Form.Item
+            label="联系人"
+            name="name"
+            rules={[{ required: true }, { type: "string", max: 20 }]}
+          >
             <Input placeholder="请输入" />
           </Form.Item>
-          <Form.Item label="手机号" rules={formRule} name="mobile">
-            <Input placeholder="请输入" />
+          <Form.Item label="手机号" rules={[{ required: true }]} name="mobile">
+            <Input placeholder="请输入" type="number" />
           </Form.Item>
 
           <Form.Item
@@ -202,7 +208,11 @@ function EditContact({ map, dispatch }) {
             label="所在地区"
             extra={
               <div onClick={gotoLocation}>
-                <IconFont iconName="dingwei" className="" />
+                <IconFont
+                  iconName="dingwei"
+                  className=""
+                  style={{ color: "#7cfc00" }}
+                />
               </div>
             }
             rules={formRule}
@@ -215,7 +225,7 @@ function EditContact({ map, dispatch }) {
              {mapAddr?.address?.street}
            </p> */}
           </Form.Item>
-          <Form.Item label="详细地址" rules={formRule} name="detailed_address">
+          <Form.Item label="联系地址" rules={formRule} name="detailed_address">
             <Input placeholder="请输入" />
             {/* <p>{mapAddr?.poi.name}</p> */}
           </Form.Item>

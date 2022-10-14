@@ -35,8 +35,8 @@ function Evalute() {
   let id = new URLSearchParams(useLocation().search).get("id");
   const [pageData, setPageData] = useState([]);
   const [desc, setDesc] = useState("");
-  const [score, setScore] = useState();
-  const [isSolve, setIsSolve] = useState();
+  const [score, setScore] = useState(3);
+  const [isSolve, setIsSolve] = useState(1);
 
   useEffect(() => {}, []);
   const handleEvalute = async () => {
