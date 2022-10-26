@@ -143,7 +143,7 @@ function Contacts({ selectConcate }) {
               {item.name} {item.company_name}
             </p>
             <p>{item.mobile}</p>
-            <p>{item.address}</p>
+            <p>{item.detailed_address}</p>
           </div>
           <div className="footer" onClick={(e) => e.stopPropagation()}>
             <span onClick={() => handleDelContact(item.id)}>

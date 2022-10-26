@@ -10,15 +10,10 @@ import {
   Space,
   Image,
   ImageViewer,
+  Modal,
 } from "antd-mobile";
 import "./index.less";
-import TitleBar from "@Components/TitleBar";
-import {
-  CheckCircleFill,
-  ClockCircleFill,
-  HandPayCircleOutline,
-} from "antd-mobile-icons";
-import headimg from "../../assets/img/head.jpg";
+import { CheckCircleFill, ClockCircleFill } from "antd-mobile-icons";
 import {
   useNavigate,
   useParams,
@@ -26,74 +21,43 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { workOrderDetail } from "../../api/workorder";
-import Item from "antd-mobile/es/components/dropdown/item";
 import { orderStatus } from "../../utils/constant";
 import moment from "moment";
 import IconFont from "../../components/IconFont";
 
 const { Step } = Steps;
 
-const orderStatusList = [
-  {
-    txt: "已受理",
-    num: 2,
-  },
-  {
-    txt: "已接单",
-    num: 3 || 4,
-  },
-  {
-    txt: "已完工",
-    num: 5,
-  },
-  {
-    txt: "已评价",
-    num: 6,
-  },
-];
 function Progress() {
   let navigate = useNavigate();
+  const { id } = useParams();
   const imageViewerRef = useRef(null);
-  let id = new URLSearchParams(useLocation().search).get("id");
-  const [imgVisible, setImgVisible] = useState(false);
+  console.log(id);
+  // let id = new URLSearchParams(useLocation().search).get("id");
   const [imgMVisible, setImgMVisible] = useState(false);
-  const [pageData, setPageData] = useState({});
+  const [pageData, setPageData] = useState(null);
+  const [workOrder, setWorkOrder] = useState({});
 
   useEffect(() => {
-    getPageData();
-  }, []);
-  const getPageData = async () => {
-    let { data } = await workOrderDetail({ id: id });
+    getPageData(id);
+  }, [id]);
+  const getPageData = async (id) => {
+    let { data } = await workOrderDetail({ id });
     data.log = data.log.reverse();
     setPageData(data);
+    setWorkOrder(data.workOrder);
   };
 
   const $step = () => {
-    return pageData?.log?.map((item, index) => {
-      let { stage } = item;
-      let desc = "";
-      if (stage === 2) {
-        desc = "您的服务需求已被受理，正在给您安排服务工程师";
-      } else if (stage === 3) {
-        desc = "服务工程师：" + item.user_name;
-      } else if (stage === 4) {
-        desc = "服务工程师：" + item.user_name;
-      } else if (stage === 5) {
-        desc = "您的服务已完成，请对我们的服务进行评价";
-      } else if (stage === 6) {
-        desc = item.data.remark;
-      }
-      return (
-        <Step
-          key={index}
-          title={`${orderStatus(item.stage)}   ${moment(item.gmt_create).format(
-            "YYYY-MM-DD HH:mm"
-          )}`}
-          status={index == 0 ? "process" : "wait"}
-          description={item.describe}
-        />
-      );
-    });
+    return pageData?.log?.map((item, index) => (
+      <Step
+        key={index}
+        title={`${orderStatus(item.stage)}   ${moment(item.gmt_create).format(
+          "YYYY-MM-DD HH:mm"
+        )}`}
+        status={index == 0 ? "process" : "wait"}
+        description={item.describe}
+      />
+    ));
   };
   const previewImg = () => {
     if (!pageData.wechat_url) {
@@ -103,7 +67,17 @@ function Progress() {
       });
       return;
     }
-    setImgVisible(true);
+    Modal.show({
+      content: (
+        <div>
+          <Image src={pageData.wechat_url} fit="contain" />
+          <p style={{ marginTop: "16px", textAlign: "center" }}>
+            长按二维码添加服务工程师企业微信
+          </p>
+        </div>
+      ),
+      closeOnMaskClick: true,
+    });
   };
   //获取自定义step 状态 2:已受理 ,3：已接单 4:转派 5:完工, 6：已评价
   const getStepStatus = (step, nowStep) => {
@@ -121,66 +95,52 @@ function Progress() {
       }
     }
   };
-
-  return (
+  const back = () => {
+    navigate("/mywork", { replace: true });
+  };
+  return pageData ? (
     <div className="progress-wrap">
-      <TitleBar title="进度查询" />
+      <NavBar back="返回" onBack={back}>
+        进度查询
+      </NavBar>
+      {/* <TitleBar title="进度查询" /> */}
       <Card className="card-margin">
         <List className="my-list no-border">
-          <List.Item prefix={<Avatar src={pageData.workOrder?.head_url} />}>
-            <p>{pageData.workOrder?.submitter}</p>
-            <p>{pageData.workOrder?.submitter_company}</p>
+          <List.Item prefix={<Avatar src={workOrder?.head_url} />}>
+            <p>{workOrder?.submitter}</p>
+            <p>{workOrder?.submitter_company}</p>
           </List.Item>
-          <List.Item prefix={"服务单号"}>
-            {pageData.workOrder?.service_code}
-          </List.Item>
-          <List.Item prefix={"服务工程师"}>
-            {pageData.service_engineer}
-            <span onClick={previewImg}>
-              <IconFont
-                size="16"
-                iconName="erweima1"
-                style={{ margin: "0 6px" }}
-              />
-            </span>
-          </List.Item>
-        </List>
-        {/* <div className="head">
-          <Avatar src={pageData.workOrder?.head_url} />
-          <p>{pageData.workOrder?.submitter}</p>
-          <p>{pageData.workOrder?.submitter_company}</p>
-        </div> */}
-        {/* <div className="content">
-          服务单号 {pageData.workOrder?.service_code}
-        </div>
-        <div className="footer">
-          {pageData?.service_engineer ? (
-            <>
-              服务工程师
+          <List.Item prefix={"服务单号"}>{workOrder?.service_code}</List.Item>
+          {pageData.service_engineer ? (
+            <List.Item prefix={"服务工程师"} onClick={previewImg} arrow={null}>
               {pageData.service_engineer}
-              <span onClick={previewImg}>
-                <IconFont size="16" iconName="erweima1" />
+              <span>
+                <IconFont
+                  size="16"
+                  iconName="erweima1"
+                  style={{ margin: "0 6px" }}
+                />
               </span>
-            </>
+            </List.Item>
           ) : null}
-        </div> */}
+        </List>
       </Card>
       <Card className="card-margin">
         <List className="my-list">
           <List.Item prefix={"省份"}>
-            {pageData.workOrder?.cityName ?? "--"}
+            {workOrder?.cityName ? workOrder.cityName : "--"}
           </List.Item>
           <List.Item prefix={"描述"}>
-            {pageData.workOrder?.describe ?? "--"}
+            {workOrder?.describe ? workOrder.describe : "--"}
           </List.Item>
           <List.Item prefix={"产品型号"}>
-            {pageData.workOrder?.model ?? "--"}
+            {workOrder?.model ? workOrder.model : "--"}
           </List.Item>
 
           <List.Item prefix={"照片"}>
-            {pageData.workOrder?.photo.length > 0 ? (
+            {workOrder?.photo.length > 0 ? (
               <Space wrap>
-                {pageData.workOrder?.photo?.map((item, index) => (
+                {workOrder?.photo?.map((item, index) => (
                   <Image
                     key={index}
                     src={item}
@@ -267,13 +227,7 @@ function Progress() {
         </Steps>
         <Steps direction="vertical">{$step()}</Steps>
       </Card>
-      <ImageViewer
-        image={pageData.wechat_url}
-        visible={imgVisible}
-        onClose={() => {
-          setImgVisible(false);
-        }}
-      />
+
       <ImageViewer.Multi
         ref={imageViewerRef}
         images={pageData.workOrder?.photo}
@@ -283,7 +237,7 @@ function Progress() {
         }}
       />
     </div>
-  );
+  ) : null;
 }
 
 export default Progress;

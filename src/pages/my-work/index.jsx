@@ -7,12 +7,18 @@ import "./index.less";
 import { connect } from "react-redux";
 import { tabAction } from "@Store/actions/tab-action";
 import store from "@Store";
-
+import { useNavigate } from "react-router-dom";
 function MyWork({ tab }) {
+  let navigate = useNavigate();
   const handleTabChange = (key) => store.dispatch(tabAction.selectTab(key));
+  const back = () => {
+    navigate("/", { replace: true });
+  };
   return (
     <div className="my-work">
-      <TitleBar title="我的服务单" />
+      <NavBar back="返回" onBack={back}>
+        我的服务单
+      </NavBar>
       <Tabs onChange={handleTabChange} activeKey={tab.value}>
         <Tabs.Tab title="所有服务" key="1" destroyOnClose>
           <Serve tabKey={1} />

@@ -159,6 +159,7 @@ function Complain() {
             value={fileList}
             onChange={setFileList}
             upload={mockUpload}
+            showFailed={false}
             maxCount={3}
             beforeUpload={beforeUpload}
           />

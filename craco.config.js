@@ -67,7 +67,7 @@ module.exports = {
       "@Components": pathResolve("src/components"),
       "@": pathResolve("src"),
       "@Store": pathResolve("src/store"),
-      "@Util": pathResolve("src/util"),
+      "@Utils": pathResolve("src/utils"),
     },
   },
   babel: {

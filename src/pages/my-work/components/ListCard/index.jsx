@@ -17,9 +17,13 @@ function ListCard({ msg }) {
   };
   const gotoLookupProgress = (id) => {
     navigate({
-      pathname: "/progress",
-      search: `?id=${id}`,
+      pathname: `/progress/${id}`,
     });
+    // navigate({
+    //   pathname: `/progress`,
+    // search: `?id=${id}`,
+    //   // search: `?id=${id}`,
+    // });
   };
 
   return (

@@ -204,6 +204,7 @@ function Work() {
             value={fileList}
             onChange={setFileList}
             upload={mockUpload}
+            showFailed={false}
             accept="image/*"
             maxCount={3}
             beforeUpload={beforeUpload}

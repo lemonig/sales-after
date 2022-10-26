@@ -9,6 +9,7 @@ import {
   Form,
   Input,
   Picker,
+  NumberKeyboard,
 } from "antd-mobile";
 import {
   useNavigate,
@@ -26,6 +27,7 @@ import {
   companyList,
 } from "../../../api/contact";
 import Map from "../../map";
+import { isPhone } from "@Utils/validate";
 
 function EditContact({ map, dispatch }) {
   const [isAdd, setIsAdd] = useState(true);
@@ -34,12 +36,12 @@ function EditContact({ map, dispatch }) {
   const [mapAddr, setMapAddr] = useState(null); //地图选择
   const [loading, setLoading] = useState(false);
   const [componanyList, setComponanyList] = useState([]); //公司
-
+  const [visible, setVisible] = useState(false); //数字键盘
   const [form] = Form.useForm();
   let navigate = useNavigate();
   let id = new URLSearchParams(useLocation().search).get("id");
   const formRule = [{ required: true }];
-
+  let string = "";
   useEffect(() => {
     if (id) {
       setIsAdd(false);
@@ -69,6 +71,48 @@ function EditContact({ map, dispatch }) {
   const back = () => {
     navigate(-1, { replace: true });
   };
+  // 数字键盘
+  const actions = {
+    onClose: () => {
+      // 触发表单检验
+      // form.validateFields(["mobile"], (err) => {
+      //   if (err) {
+      //     console.log(err);
+      //   }
+      // });
+      setVisible(false);
+    },
+    onInput: (key) => {
+      const mobile = form.getFieldsValue().mobile;
+      var newMobile = "";
+      if (mobile) {
+        newMobile = mobile + key;
+      } else {
+        newMobile = key;
+      }
+      form.setFieldsValue({
+        mobile: newMobile,
+      });
+      form.validateFields(["mobile"], (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    },
+    onDelete: () => {
+      const mobile = form.getFieldsValue().mobile;
+      if (mobile) {
+        form.setFieldsValue({
+          mobile: mobile.substring(0, mobile.length - 1),
+        });
+      }
+      form.validateFields(["mobile"], (err) => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    },
+  };
 
   const submitForm = async () => {
     await form.validateFields();
@@ -83,7 +127,7 @@ function EditContact({ map, dispatch }) {
     values.coordinate2 = mapAddr?.lnglat?.lat;
     setLoading(true);
     if (isAdd) {
-      let { success, data } = await contactAdd(values);
+      let { success, message } = await contactAdd(values);
       if (success) {
         Toast.show({
           icon: "success",
@@ -92,13 +136,13 @@ function EditContact({ map, dispatch }) {
         back();
       } else {
         Toast.show({
-          content: data,
+          content: message,
         });
       }
       setLoading(false);
     } else {
       values.id = id;
-      let { success, data } = await contactEdit(values);
+      let { success, message } = await contactEdit(values);
       if (success) {
         Toast.show({
           icon: "success",
@@ -107,7 +151,7 @@ function EditContact({ map, dispatch }) {
         back();
       } else {
         Toast.show({
-          content: data,
+          content: message,
         });
       }
       setLoading(false);
@@ -138,10 +182,13 @@ function EditContact({ map, dispatch }) {
   };
 
   const checkMobile = (_, value) => {
-    if (value.realValue) {
-      return Promise.resolve();
+    // isPhone(value)
+    if (value) {
+      if (!isPhone(value)) {
+        return Promise.reject(new Error("手机号格式不正确!"));
+      }
     }
-    return Promise.reject(new Error("手机号不能为空!"));
+    return Promise.resolve();
   };
 
   return showMap ? (
@@ -199,11 +246,26 @@ function EditContact({ map, dispatch }) {
           >
             <Input placeholder="请输入" />
           </Form.Item>
-          <Form.Item label="手机号" rules={[{ required: true }]} name="mobile">
-            <Input placeholder="请输入" type="number" />
+          <Form.Item
+            label="手机号"
+            validateTrigger="onBlur"
+            // rules={[{ required: true }]}
+            rules={[{ required: true }, { validator: checkMobile }]}
+            name="mobile"
+          >
+            <Input
+              placeholder="请输入"
+              type="tel"
+              // onBlur={actions.onClose}
+              // readonly="readonly"
+              // onFocus={() => {
+              //   document.activeElement.blur(); //禁止原生键盘
+              //   setVisible(true);
+              // }}
+            />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item
             name="address"
             label="所在地区"
             extra={
@@ -218,19 +280,19 @@ function EditContact({ map, dispatch }) {
             rules={formRule}
           >
             <Input placeholder="请输入" />
-            {/* <p>
-             {mapAddr?.address?.city}
-             {mapAddr?.address?.district}
-             {mapAddr?.address?.township}
-             {mapAddr?.address?.street}
-           </p> */}
-          </Form.Item>
-          <Form.Item label="联系地址" rules={formRule} name="detailed_address">
+          </Form.Item> */}
+          <Form.Item label="联系地址" name="detailed_address">
             <Input placeholder="请输入" />
             {/* <p>{mapAddr?.poi.name}</p> */}
           </Form.Item>
         </Form>
       )}
+      <NumberKeyboard
+        visible={visible}
+        onClose={actions.onClose}
+        onInput={actions.onInput}
+        onDelete={actions.onDelete}
+      />
     </div>
   );
 }

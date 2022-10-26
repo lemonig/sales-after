@@ -13,6 +13,8 @@ const Map = React.lazy(() => import("../pages/map")); //投诉建议
 
 const Progress = React.lazy(() => import("../pages/progress")); //进度
 const Evalute = React.lazy(() => import("../pages/evalute"));
+// 状态
+const NotFound = React.lazy(() => import("../pages/404"));
 /**
  * index: true 默认主路由不需要path
  * **/
@@ -93,9 +95,13 @@ const config = [
         ),
       },
       {
-        path: "progress",
+        path: "progress/:id",
         element: <Progress />,
       },
+      // {
+      //   path: "progress",
+      //   element: <Progress />,
+      // },
       {
         path: "evalute",
         element: <Evalute />,
@@ -103,8 +109,12 @@ const config = [
     ],
   },
   {
+    path: "/404",
+    element: <NotFound />,
+  },
+  {
     path: "*",
-    element: <Login />,
+    element: <NotFound />,
   },
 ];
 export default config;

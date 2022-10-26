@@ -12,10 +12,14 @@ export async function mockUpload(file) {
   let res = await compressImage(file);
   let formData = new FormData();
   formData.append("file", res);
-  let { data } = await contactList(formData);
-  return {
-    url: data,
-  };
+  let { data, success } = await contactList(formData);
+  if (success) {
+    return {
+      url: data,
+    };
+  } else {
+    Toast.show("图片上传失败");
+  }
 }
 
 export async function mockUploadFail() {
