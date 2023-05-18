@@ -74,6 +74,11 @@ function Progress() {
           <p style={{ marginTop: "16px", textAlign: "center" }}>
             长按二维码添加服务工程师企业微信
           </p>
+          <p style={{ marginTop: "16px", textAlign: "center" }}>
+            <a href={`tel:${pageData.service_phone}`}>
+              紧急情况可点击次电话联系
+            </a>
+          </p>
         </div>
       ),
       closeOnMaskClick: true,
@@ -114,15 +119,20 @@ function Progress() {
           {pageData.service_engineer ? (
             <List.Item prefix={"服务工程师"} onClick={previewImg} arrow={null}>
               {pageData.service_engineer}
-              <span>
-                <IconFont
-                  size="16"
-                  iconName="erweima1"
-                  style={{ margin: "0 6px" }}
-                />
+              <span style={{ margin: "0 6px" }}>
+                <Space wrap>
+                  》 联系方式
+                  <IconFont size="16" iconName="erweima1" />
+                </Space>
               </span>
             </List.Item>
           ) : null}
+          <List.Item prefix="服务时间">
+            <Space wrap>
+              <p>8:30-11:45</p>
+              <p>13:15-21:00</p>
+            </Space>
+          </List.Item>
         </List>
       </Card>
       <Card className="card-margin">

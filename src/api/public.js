@@ -5,7 +5,7 @@ export const contactList = (file) => {
 };
 
 export const cityList = () => {
-  return _get(`api/faulttype/list`);
+  return _get(`api/city/list`);
 };
 export const captcha = (params) => {
   return _post(`api/captcha`, params);

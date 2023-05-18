@@ -10,6 +10,8 @@ const ContactEdit = React.lazy(() =>
 const MyWork = React.lazy(() => import("../pages/my-work")); //我的工单
 const Complain = React.lazy(() => import("../pages/complain")); //投诉建议
 const Map = React.lazy(() => import("../pages/map")); //投诉建议
+const Armature = React.lazy(() => import("../pages/armature"));
+const MyArmature = React.lazy(() => import("../pages/armature-my"));
 
 const Progress = React.lazy(() => import("../pages/progress")); //进度
 const Evalute = React.lazy(() => import("../pages/evalute"));
@@ -105,6 +107,14 @@ const config = [
       {
         path: "evalute",
         element: <Evalute />,
+      },
+      {
+        path: "armature",
+        element: <Armature />,
+      },
+      {
+        path: "my-armature",
+        element: <MyArmature />,
       },
     ],
   },

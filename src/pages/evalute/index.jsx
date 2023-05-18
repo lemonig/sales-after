@@ -1,48 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { Rate, Space, Toast, TextArea, Button, Grid } from "antd-mobile";
-import { SmileOutline } from "antd-mobile-icons";
-import TitleBar from "@Components/TitleBar";
+import { Rate, Toast, TextArea, Button, NavBar } from "antd-mobile";
 import "./index.less";
-import { evaluate } from "../../api/evalute";
-import {
-  useNavigate,
-  useParams,
-  useLocation,
-  useSearchParams,
-} from "react-router-dom";
-import IconFont from "../../components/IconFont";
-
-const menuList = [
-  {
-    icon: "chaping",
-    name: "差评",
-    val: 1,
-  },
-  {
-    icon: "zhongping",
-    name: "中评",
-    val: 2,
-  },
-  {
-    icon: "haoping",
-    name: "好评",
-    val: 3,
-  },
-];
+import { evaluate, hasEvaluated as hasEvaluatedApi } from "../../api/evalute";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function Evalute() {
   let navigate = useNavigate();
   let id = new URLSearchParams(useLocation().search).get("id");
   const [pageData, setPageData] = useState([]);
   const [desc, setDesc] = useState("");
-  const [score, setScore] = useState(3);
+  const [score1, setScore1] = useState(0);
+  const [score2, setScore2] = useState(0);
   const [isSolve, setIsSolve] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    const hasEvaluted = async () => {
+      let { success, data } = await hasEvaluatedApi(id);
+
+      if (
+        data &&
+        "processing_efficiency" in data &&
+        "service_attitude" in data
+      ) {
+        navigate({
+          pathname: `/mywork`,
+          replace: true,
+        });
+      }
+    };
+    hasEvaluted();
+  }, []);
+
   const handleEvalute = async () => {
+    if (!score1 || !score2) {
+      Toast.show({
+        content: "请对我们的服务做出评价，谢谢！",
+        position: "top",
+      });
+      return;
+    }
+    setLoading(true);
     let params = {
       work_order_id: id,
-      evaluate: score,
+      processing_efficiency: score1,
+      service_attitude: score2,
       remark: desc,
       solved: isSolve,
     };
@@ -52,55 +54,59 @@ function Evalute() {
         icon: "success",
         content: "提交成功",
       });
+      back();
     } else {
       Toast.show({
         icon: "fail",
         content: "失败",
       });
+      setLoading(false);
     }
-    back();
   };
   const back = () => {
-    navigate(-1, { replace: true });
+    navigate({
+      pathname: `/mywork`,
+      replace: true,
+    });
   };
 
-  const handleRateChange = (val) => {
-    setScore(val);
-    // console.log(val);
+  const handleRateChange1 = (val) => {
+    setScore1(val);
+  };
+
+  const handleRateChange2 = (val) => {
+    setScore2(val);
   };
   const handleTextChange = (val) => {
-    // console.log(val);
     setDesc(val);
-  };
-  const handleScore = (val) => {
-    setScore(val);
   };
 
   return (
     <div className="evalute-wrap">
-      <TitleBar title="评价" />
+      <NavBar back="返回" onBack={back}>
+        评价
+      </NavBar>
       <div className="main">
-        {/* <Rate
-          allowHalf
-          defaultValue={2}
-          character={<SmileOutline />}
-          style={{ marginBottom: "18px" }}
-          onChange={handleRateChange}
-        /> */}
         <div className="evalute">
-          <Grid columns={3} gap={8}>
-            {menuList.map((item, index) => (
-              <Grid.Item key={index} onClick={() => handleScore(item.val)}>
-                <div
-                  className={`menu-item ${item.val == score ? "active" : ""}`}
-                >
-                  <p>{item.name}</p>
-
-                  <IconFont iconName={item.icon} size="16" />
-                </div>
-              </Grid.Item>
-            ))}
-          </Grid>
+          <p>您对工程师的服务满意吗</p>
+          <div>
+            <span>处理效率</span>
+            <Rate
+              allowHalf={false}
+              defaultValue={0}
+              onChange={handleRateChange1}
+              value={score1}
+            />
+          </div>
+          <div>
+            <span>服务态度</span>
+            <Rate
+              allowHalf={false}
+              defaultValue={0}
+              onChange={handleRateChange2}
+              value={score2}
+            />
+          </div>
         </div>
         <div className="quest">
           <p>问题是否解决</p>
@@ -110,13 +116,11 @@ function Evalute() {
                 setIsSolve(1);
               }}
               fill="outline"
-              // color="primary"
               className={isSolve == 1 ? "my-button" : ""}
             >
               已解决
             </Button>
             <Button
-              // color="primary"
               fill="outline"
               onClick={() => {
                 setIsSolve(2);
@@ -139,6 +143,7 @@ function Evalute() {
           fill="solid"
           style={{ width: "90%" }}
           onClick={handleEvalute}
+          loading={loading}
         >
           确认
         </Button>

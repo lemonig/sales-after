@@ -32,16 +32,10 @@ import {
   faulttypeList,
   workOrderAdd,
 } from "../../api/workorder";
-import { contactList, cityList } from "../../api/public";
+import { contactList, cityList as cityListApi } from "../../api/public";
 import { log } from "@craco/craco/lib/logger";
 
-const provinceList = provinceJSON.map((item) => {
-  return {
-    value: item.code,
-    label: item.name,
-    key: item.code,
-  };
-});
+const provinceList = provinceJSON.map((item) => {});
 
 function Work() {
   let navigate = useNavigate();
@@ -56,9 +50,12 @@ function Work() {
   const [contactPopupVis, setContactPopupVis] = useState(false); //联系人弹框vis
   const [concated, setConcated] = useState({}); //已选择的联系人
   const [loading, setLoading] = useState(false);
+  const [photpRule, setPhotpRule] = useState(null);
+  const [cityList, setCityList] = useState([]);
 
   useEffect(() => {
     getTypePickerData();
+    getCityList();
   }, []);
 
   const getTypePickerData = async () => {
@@ -69,6 +66,16 @@ function Work() {
     }));
 
     setTypePickerData([newdata]);
+  };
+  const getCityList = async () => {
+    let { data } = await cityListApi();
+    let newD = data.map((item) => ({
+      value: item.code,
+      label: item.name,
+      key: item.code,
+    }));
+
+    setCityList(newD);
   };
   const back = () => {
     navigate(-1, { replace: true });
@@ -109,10 +116,21 @@ function Work() {
         icon: "fail",
         content: "失败",
       });
+      setLoading(false);
     }
-    setLoading(false);
     // })
   };
+
+  const onTypeSelected = (value) => {
+    console.log(value);
+    if (value.toString() === "2") {
+      console.log(11);
+      setPhotpRule({ required: true, message: "请上传照片" });
+    } else {
+      setPhotpRule(null);
+    }
+  };
+
   return (
     <>
       <NavBar back="返回" onBack={back}>
@@ -135,17 +153,25 @@ function Work() {
         }
       >
         <Form.Item
-          label="联系人"
+          label="现场联系人"
           name="linkman_id"
           rules={[{ required: true }]}
           onClick={() => {
             setContactPopupVis(true);
           }}
         >
-          <p>
-            {concated.name} {concated.mobile}
-          </p>
-          <p>{concated.address}</p>
+          {concated.name ? (
+            <>
+              <p>
+                {concated.name} {concated.mobile}
+              </p>
+              <p>{concated.address}</p>
+            </>
+          ) : (
+            <span className="placer-hoder-text">
+              请添加您的真实联系方式，方便服务工程师联系您
+            </span>
+          )}
         </Form.Item>
         <Form.Item
           label="选择类型"
@@ -156,7 +182,7 @@ function Work() {
           }}
           trigger="onConfirm"
         >
-          <Picker columns={typePickerData}>
+          <Picker columns={typePickerData} onConfirm={onTypeSelected}>
             {([value]) =>
               value ? (
                 value.label
@@ -176,7 +202,7 @@ function Work() {
           }}
           trigger="onConfirm"
         >
-          <Picker columns={[provinceList]}>
+          <Picker columns={[cityList]}>
             {([value]) =>
               value ? (
                 value.label
@@ -199,7 +225,15 @@ function Work() {
         <Form.Item label="产品型号" name="model">
           <Input placeholder="请输入厂家、仪器、型号" />
         </Form.Item>
-        <Form.Item label="照片" layout="vertical" name="photo">
+        <Form.Item label="产品编码" name="model_code">
+          <Input placeholder="请输入产品编码" />
+        </Form.Item>
+        <Form.Item
+          label="照片"
+          layout="vertical"
+          name="photo"
+          rules={photpRule ? [photpRule] : null}
+        >
           <ImageUploader
             value={fileList}
             onChange={setFileList}

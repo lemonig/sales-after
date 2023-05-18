@@ -49,6 +49,16 @@ const menuList = [
     name: "投诉建议",
     path: "/complain",
   },
+  {
+    icon: "shenqingcaigou-",
+    name: "配件购买",
+    path: "/armature",
+  },
+  {
+    icon: "caigoudingdan-bian",
+    name: "我的配件",
+    path: "/my-armature",
+  },
 ];
 const banner = colors.map((color, index) => (
   <Swiper.Item key={index}>
@@ -59,7 +69,6 @@ const banner = colors.map((color, index) => (
     </div>
   </Swiper.Item>
 ));
-
 const $menu = menuList.map((menu, index) => (
   <Grid.Item key={index}>
     <NavLink to={menu.path}>
