@@ -126,7 +126,10 @@ function Armature() {
           name="accessory_shoplist"
           rules={[{ required: true }]}
         >
-          <TextArea placeholder="请输入内容" rows={3} />
+          <TextArea
+            placeholder="请描述申购的产品名称、产品型号和配件名称等信息"
+            rows={3}
+          />
         </Form.Item>
 
         <Form.Header />
