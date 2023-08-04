@@ -18,7 +18,7 @@ import {
   Toast,
 } from "antd-mobile";
 import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   demoSrc,
   mockUpload,
@@ -35,7 +35,7 @@ import {
 import { contactList, cityList as cityListApi } from "../../api/public";
 import { log } from "@craco/craco/lib/logger";
 
-const provinceList = provinceJSON.map((item) => {});
+const provinceList = provinceJSON.map((item) => { });
 
 function Work() {
   let navigate = useNavigate();
@@ -52,6 +52,7 @@ function Work() {
   const [loading, setLoading] = useState(false);
   const [photpRule, setPhotpRule] = useState(null);
   const [cityList, setCityList] = useState([]);
+  let fault_type_id = new URLSearchParams(useLocation().search).get("id");
 
   useEffect(() => {
     getTypePickerData();
@@ -101,7 +102,7 @@ function Work() {
       });
     }
 
-    values.fault_type_id = values.fault_type_id[0];
+    values.fault_type_id = fault_type_id
     values.cityCode = values.cityCode[0];
     setLoading(true);
     let { success } = await workOrderAdd(values);
@@ -122,9 +123,7 @@ function Work() {
   };
 
   const onTypeSelected = (value) => {
-    console.log(value);
     if (value.toString() === "2") {
-      console.log(11);
       setPhotpRule({ required: true, message: "请上传照片" });
     } else {
       setPhotpRule(null);
@@ -173,7 +172,7 @@ function Work() {
             </span>
           )}
         </Form.Item>
-        <Form.Item
+        {/* <Form.Item
           label="选择类型"
           name="fault_type_id"
           rules={[{ required: true }]}
@@ -191,7 +190,7 @@ function Work() {
               )
             }
           </Picker>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           label="选择省份"
@@ -232,7 +231,9 @@ function Work() {
           label="照片"
           layout="vertical"
           name="photo"
-          rules={photpRule ? [photpRule] : null}
+          rules={
+            [{ required: fault_type_id === '2' ? true : false, message: "请上传照片" }]
+          }
         >
           <ImageUploader
             value={fileList}

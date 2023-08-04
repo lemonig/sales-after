@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
 import {
-  Button,
-  Space,
   Swiper,
-  Toast,
   Divider,
   Grid,
-  Image,
   Modal,
-  Popup,
   Form,
-  Input,
-  Checkbox,
-  Radio,
 } from "antd-mobile";
 import {
   NavLink,
@@ -22,18 +14,24 @@ import {
   useLocation,
 } from "react-router-dom";
 import IconFont from "../../components/IconFont";
-import bannerImg from "../../assets/img/banner.jpg";
 import "./index.less";
-import { captcha, login, tokenCheck } from "../../api/public";
 import { _get, _post } from "../../server/http";
 
 const colors = ["#1866BB"];
 const menuList = [
   {
-    icon: "gongdan-xinjiangongdancopy",
-    name: "提交工单",
+    icon: "quizz-icon",
+    name: "咨询服务",
     path: "/work",
+    id: '1'
   },
+  {
+    icon: "gongdan-xinjiangongdancopy",
+    name: "报修服务",
+    path: "/work",
+    id: '2'
+  },
+
   {
     icon: "cylxr",
     name: "我的联系人",
@@ -71,7 +69,10 @@ const banner = colors.map((color, index) => (
 ));
 const $menu = menuList.map((menu, index) => (
   <Grid.Item key={index}>
-    <NavLink to={menu.path}>
+    <NavLink to={{
+      pathname: menu.path,
+      search: `?id=${menu.id}`
+    }} >
       <div className="menu-item">
         <IconFont iconName={menu.icon} size="16" />
         <p>{menu.name}</p>
@@ -121,7 +122,7 @@ function Home() {
     <div className="home-wrap">
       <Swiper>{banner}</Swiper>
       <div className="menu-wrap">
-        <p>预约服务</p>
+        <p>我的服务</p>
         <Divider
           style={{
             borderColor: "#bbbbbb",
